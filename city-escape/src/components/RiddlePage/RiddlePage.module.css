@@ -1,0 +1,129 @@
+.container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.text {
+  text-align: justify;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+}
+
+.quiz {
+  display: block;
+  text-align: center;
+  margin-top: 30px;
+  border: 2px solid #ddd;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.quiz p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.label {
+  display: flex; /* Align radio button and text in a row */
+  align-items: center; /* Vertically align text with the radio button */
+  margin-bottom: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.label:hover {
+  background-color: #f0f8ff; /* Light blue background on hover */
+  border-color: #007bff; /* Primary color border on hover */
+}
+
+.label input {
+  margin-right: 15px; /* Add space between radio button and text */
+  width: 18px; /* Standard radio button width */
+  height: 18px; /* Standard radio button height */
+  cursor: pointer;
+}
+
+.label::before {
+  content: "";
+  position: absolute;
+  left: 10px; /* Space for the custom radio button */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #007bff; /* Primary color border */
+  border-radius: 50%; /* Circular button */
+  background: #ffffff;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.label input:checked + &::before {
+  background: #007bff; /* Primary color when selected */
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); /* Glow effect */
+}
+
+.label input:checked + &::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 14px; /* Align the dot within the circle */
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background: #ffffff; /* Inner white dot */
+  border-radius: 50%;
+}
+
+.label input:checked + span {
+  color: #007bff; /* Change text color when selected */
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center; /* Horizontally center the button */
+  align-items: center; /* Vertically center the button if needed */
+  margin-top: 20px; /* Adjust margin as necessary */
+  width: 100%; /* Ensure the container spans full width */
+}
+
+.feedback {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+}

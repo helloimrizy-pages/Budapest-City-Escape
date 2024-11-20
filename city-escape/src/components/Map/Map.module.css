@@ -1,0 +1,48 @@
+.map {
+  height: 100vh;
+  width: 100vw;
+}
+
+.popup {
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  text-align: left;
+  color: #333;
+  max-width: 300px; /* Restrict the popup's maximum width */
+  overflow-wrap: break-word; /* Ensure long text breaks nicely */
+}
+
+.popup h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.popup img {
+  display: block;
+  width: 100%; /* Ensure the image fits within the popup */
+  max-height: 150px; /* Restrict the maximum height */
+  object-fit: cover; /* Scale the image while maintaining aspect ratio */
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.popup p {
+  margin: 0 0 10px 0;
+  line-height: 1.6;
+}
+
+.popup button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.popup button:hover {
+  background-color: #0056b3;
+}
