@@ -1,0 +1,16 @@
+/* Leaflet Container */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  outline: none;
+}
+
+/* Default Marker Icon */
+.leaflet-marker-icon {
+  margin: 0;
+  padding: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
