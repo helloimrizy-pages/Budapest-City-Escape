@@ -1,0 +1,552 @@
+// File: src/components/Map/Map.module.css
+.map {
+  height: 100vh;
+  width: 100vw;
+}
+
+.popup {
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  text-align: left;
+  color: #333;
+  max-width: 300px; /* Restrict the popup's maximum width */
+  overflow-wrap: break-word; /* Ensure long text breaks nicely */
+}
+
+.popup h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.popup img {
+  display: block;
+  width: 100%; /* Ensure the image fits within the popup */
+  max-height: 150px; /* Restrict the maximum height */
+  object-fit: cover; /* Scale the image while maintaining aspect ratio */
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.popup p {
+  margin: 0 0 10px 0;
+  line-height: 1.6;
+}
+
+.popup button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.popup button:hover {
+  background-color: #0056b3;
+}
+
+// File: src/components/Map/Map.tsx
+import React from "react";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
+import Button from "../Shared/Button";
+import styles from "./Map.module.css";
+
+const Map = () => {
+  const navigate = useNavigate();
+
+  const handleProceed = () => {
+    const passcode = prompt("Enter the passcode to proceed:");
+    if (passcode === "1234") {
+      navigate("/riddle");
+    } else {
+      alert("Incorrect passcode. Try again!");
+    }
+  };
+
+  return (
+    <MapContainer
+      center={[47.4894285791889, 19.059757146314627]}
+      zoom={13}
+      scrollWheelZoom={true}
+      className={styles.map}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.carto.com/">CartoDB</a>'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+      />
+
+      <Marker position={[47.4894285791889, 19.059757146314627]}>
+        <Popup>
+          <h3>City Wall Budapest - Bástya Street</h3>
+          <img
+            src="https://pestbuda.hu/uploads/media/news/0001/03/thumb_2956_news_big.jpg"
+            alt="City Wall Budapest"
+            style={imageStyle}
+          />
+          <p>
+            Archaeologists have carried out excavations in Bástya Street in the
+            Pest city center, where part of Pest's city wall once stood. The dig
+            led to finds from the 13th century to the Ottoman Period, including
+            the remains of houses, kilns, and ditches.
+          </p>
+          <p>
+            <em>
+              <strong>
+                Please scan the QR code at the location to reveal the passcode
+                and proceed to the riddle.
+              </strong>
+            </em>
+          </p>
+          <Button onClick={handleProceed}>Proceed to the Riddle</Button>
+        </Popup>
+      </Marker>
+    </MapContainer>
+  );
+};
+
+export default Map;
+
+const imageStyle: React.CSSProperties = {
+  width: "100%", // Make the image responsive
+  height: "auto",
+  borderRadius: "8px",
+  marginBottom: "10px",
+};
+
+// File: src/components/Map/index.ts
+export { default } from "./Map";
+
+// File: src/components/RiddlePage/RiddlePage.module.css
+.container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.text {
+  text-align: justify;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+}
+
+.quiz {
+  margin-top: 30px;
+  border: 2px solid #ddd;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.quiz p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.label {
+  display: flex; /* Align radio button and text in a row */
+  align-items: center; /* Vertically align text with the radio button */
+  margin-bottom: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.label:hover {
+  background-color: #f0f8ff; /* Light blue background on hover */
+  border-color: #007bff; /* Primary color border on hover */
+}
+
+.label input {
+  margin-right: 15px; /* Add space between radio button and text */
+  width: 18px; /* Standard radio button width */
+  height: 18px; /* Standard radio button height */
+  cursor: pointer;
+}
+
+.label::before {
+  content: "";
+  position: absolute;
+  left: 10px; /* Space for the custom radio button */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #007bff; /* Primary color border */
+  border-radius: 50%; /* Circular button */
+  background: #ffffff;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.label input:checked + &::before {
+  background: #007bff; /* Primary color when selected */
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); /* Glow effect */
+}
+
+.label input:checked + &::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 14px; /* Align the dot within the circle */
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background: #ffffff; /* Inner white dot */
+  border-radius: 50%;
+}
+
+.label input:checked + span {
+  color: #007bff; /* Change text color when selected */
+}
+
+.feedback {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+// File: src/components/RiddlePage/RiddlePage.tsx
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import FeedbackMessage from "../Shared/FeedbackMessage";
+import Button from "../Shared/Button";
+import styles from "./RiddlePage.module.css";
+
+const RiddlePage = () => {
+  const navigate = useNavigate();
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  const correctAnswer = "Bástya Street";
+
+  const handleAnswer = () => {
+    if (selectedAnswer === correctAnswer) {
+      setFeedback("Correct! Great job!");
+    } else {
+      setFeedback("Incorrect. Try again!");
+    }
+  };
+
+  const handleClose = () => {
+    setFeedback(null);
+    navigate("/");
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>Discover the Hidden Ruins of Budapest’s Medieval City Wall</h1>
+      </div>
+      <div className={styles.content}>
+        <img
+          src="https://pestbuda.hu/uploads/media/news/0001/03/thumb_2956_news_big.jpg"
+          alt="City Wall Budapest"
+          className={styles.image}
+        />
+        <p className={styles.text}>
+          Archaeologists have carried out excavations in Bástya Street in the
+          Pest city centre, where part of Pest's city wall once stood. The dig
+          led to finds from the 13th century to the Ottoman Period, including
+          the remains of houses, kilns and ditches. The Budapest History Museum
+          carried out a preliminary excavation of 1–11 Bástya street in
+          preparation of the park and community centre planned for the area by
+          the 5th District Council. The dig was completed between 6 July 2020
+          and 3 September on the northern area of the plot, writes the report by
+          the participating archaeologist Anikó Tóth on regeszet.aquincum.hu.
+        </p>
+      </div>
+      <div className={styles.quiz}>
+        <p>Where is this city wall located?</p>
+        {["Bástya Street", "Ráday Street", "Üllői Street", "Kinizsi utca"].map(
+          (option) => (
+            <label key={option} className={styles.label}>
+              <input
+                type="radio"
+                name="answer"
+                value={option}
+                onChange={() => setSelectedAnswer(option)}
+              />
+              {option}
+            </label>
+          )
+        )}
+        <Button onClick={handleAnswer}>Submit Answer</Button>
+      </div>
+      {feedback && (
+        <FeedbackMessage
+          message={feedback}
+          type={feedback === "Correct! Great job!" ? "success" : "error"}
+          onClose={feedback === "Correct! Great job!" ? handleClose : undefined}
+        />
+      )}
+    </div>
+  );
+};
+
+export default RiddlePage;
+
+// File: src/components/RiddlePage/index.ts
+export { default } from "./RiddlePage";
+
+// File: src/components/Shared/Button.tsx
+import React from "react";
+
+interface ButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}
+
+const Button: React.FC<ButtonProps> = ({ onClick, children, style }) => {
+  const defaultStyle: React.CSSProperties = {
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    padding: "10px 15px",
+    cursor: "pointer",
+    fontSize: "16px",
+    transition: "background-color 0.3s ease",
+    ...style,
+  };
+
+  return (
+    <button style={defaultStyle} onClick={onClick}>
+      {children}
+    </button>
+  );
+};
+
+export default Button;
+
+// File: src/components/Shared/FeedbackMessage.tsx
+import React from "react";
+
+interface FeedbackMessageProps {
+  message: string;
+  type: "success" | "error";
+  onClose?: () => void;
+}
+
+const FeedbackMessage: React.FC<FeedbackMessageProps> = ({
+  message,
+  type,
+  onClose,
+}) => {
+  const style: React.CSSProperties = {
+    padding: "15px",
+    borderRadius: "8px",
+    backgroundColor: type === "success" ? "#e7f3e9" : "#f8d7da",
+    color: type === "success" ? "#2e7d32" : "#721c24",
+    textAlign: "center",
+    fontSize: "16px",
+    fontWeight: "bold",
+    marginTop: "20px",
+  };
+
+  return (
+    <div style={style}>
+      <p>{message}</p>
+      {onClose && (
+        <button
+          onClick={onClose}
+          style={{
+            marginTop: "10px",
+            backgroundColor: "#007bff",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            padding: "8px 12px",
+            cursor: "pointer",
+            fontSize: "14px",
+          }}
+        >
+          Close
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default FeedbackMessage;
+
+// File: src/components/Shared/Shared.module.css
+.button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.feedback {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.feedback.success {
+  background-color: #e7f3e9;
+  color: #2e7d32;
+}
+
+.feedback.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+// File: src/components/Shared/index.ts
+export { default as Button } from "./Button";
+export { default as FeedbackMessage } from "./FeedbackMessage";
+
+// File: src/styles/global.css
+/* Reset styles */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+input {
+  font-family: inherit;
+}
+
+// File: src/styles/leaflet.css
+/* Leaflet Container */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  outline: none;
+}
+
+/* Default Marker Icon */
+.leaflet-marker-icon {
+  margin: 0;
+  padding: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+// File: index.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React + Vite App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
+// File: src/App.tsx
+import "leaflet/dist/leaflet.css";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Map from "./components/Map/Map.tsx";
+import RiddlePage from "./components/RiddlePage/RiddlePage.tsx";
+
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Map />} />
+        <Route path="/riddle" element={<RiddlePage />} />
+      </Routes>
+    </Router>
+  );
+}
+
+// File: src/main.tsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
