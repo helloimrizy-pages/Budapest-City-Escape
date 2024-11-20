@@ -3,9 +3,18 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import Button from "../Shared/Button";
 import styles from "./Map.module.css";
+import L from "leaflet";
+import LocationIcon from "../../assets/location.png";
 
 const Map = () => {
   const navigate = useNavigate();
+
+  const customIcon = L.icon({
+    iconUrl: LocationIcon,
+    iconSize: [70, 70], // Size of the icon
+    iconAnchor: [12, 41], // Anchor point of the icon
+    popupAnchor: [1, -34], // Position of the popup relative to the icon
+  });
 
   const handleProceed = () => {
     const passcode = prompt("Enter the passcode to proceed:");
@@ -28,7 +37,10 @@ const Map = () => {
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
 
-      <Marker position={[47.4894285791889, 19.059757146314627]}>
+      <Marker
+        position={[47.4894285791889, 19.059757146314627]}
+        icon={customIcon}
+      >
         <Popup>
           <h3>City Wall Budapest - Bástya Street</h3>
           <img
