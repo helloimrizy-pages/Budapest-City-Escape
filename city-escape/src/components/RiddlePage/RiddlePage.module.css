@@ -76,20 +76,6 @@
   cursor: pointer;
 }
 
-.label::before {
-  content: "";
-  position: absolute;
-  left: 10px; /* Space for the custom radio button */
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  border: 2px solid #007bff; /* Primary color border */
-  border-radius: 50%; /* Circular button */
-  background: #ffffff;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
 .label input:checked + &::before {
   background: #007bff; /* Primary color when selected */
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); /* Glow effect */
