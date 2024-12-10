@@ -10,7 +10,7 @@ const HowItWorks = () => {
       {/* Top Section */}
       <div className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#0d1321]">
         {/* Left Section */}
-        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center">
+        <div className="flex-1 max-w-2xl mx-auto ml-12 mr-9 text-center">
           <h1 className="text-5xl font-bold text-white text-left mb-8 pt-8">
             How It Works
           </h1>
@@ -40,7 +40,7 @@ const HowItWorks = () => {
       {/* What Do You Need? Section */}
       <div className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#1d2d44]">
         {/* Left Section */}
-        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center">
+        <div className="flex-1 max-w-2xl mx-auto ml-12 mr-9 text-center">
           <h1 className="text-5xl font-bold text-white text-left mb-8 pt-8">
             What Do You Need?
           </h1>
@@ -78,7 +78,7 @@ const HowItWorks = () => {
       {/* Who Can Play? Section */}
       <section className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#0d1321]">
         {/* Left Section */}
-        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center md:text-left">
+        <div className="flex-1 max-w-2xl mx-auto ml-12 mr-9 text-center md:text-left">
           <h2 className="text-3xl font-bold text-white text-left mb-6 pt-8">
             Who Can Play?
           </h2>
@@ -105,7 +105,7 @@ const HowItWorks = () => {
       {/* Safety and Guidelines Section */}
       <section className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#1d2d44]">
         {/* Left Section */}
-        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center">
+        <div className="flex-1 max-w-2xl mx-auto ml-12 mr-9 text-center">
           <h2 className="text-3xl font-bold text-white text-left mb-6 pt-8">
             Safety and Guidelines
           </h2>
@@ -151,7 +151,7 @@ const HowItWorks = () => {
       {/* Ready to Begin? Section */}
       <section className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#0d1321]">
         {/* Left Section */}
-        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center">
+        <div className="flex-1 max-w-2xl mx-auto ml-12 mr-9 text-center">
           <h2 className="text-3xl font-bold text-white text-left mb-6 pt-8">
             Ready to Begin?
           </h2>
