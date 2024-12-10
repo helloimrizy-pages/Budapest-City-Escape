@@ -1,4 +1,3 @@
-import React from "react";
 import BudapestLogo from "../../assets/logo.png";
 import WhatDoYouNeedLogo from "../../assets/need.png";
 import WhoCanPlayLogo from "../../assets/people.png";

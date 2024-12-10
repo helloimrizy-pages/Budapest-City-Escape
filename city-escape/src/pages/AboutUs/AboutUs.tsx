@@ -1,5 +1,3 @@
-import React from "react";
-
 const AboutUs = () => {
   return (
     <div className="bg-white-100 py-16 bg-[#0d1321]">
