@@ -4,9 +4,17 @@ interface ButtonProps {
   onClick: () => void;
   children: React.ReactNode;
   style?: React.CSSProperties;
+  className?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ onClick, children, style }) => {
+const Button: React.FC<ButtonProps> = ({
+  onClick,
+  children,
+  style,
+  className,
+}) => {
+  // If you still want some default styling when no className is provided, you can keep the defaultStyle.
+  // Otherwise, remove defaultStyle for a purely className-based approach.
   const defaultStyle: React.CSSProperties = {
     backgroundColor: "#007bff",
     color: "#fff",
@@ -20,7 +28,11 @@ const Button: React.FC<ButtonProps> = ({ onClick, children, style }) => {
   };
 
   return (
-    <button style={defaultStyle} onClick={onClick}>
+    <button
+      className={className}
+      style={className ? style : defaultStyle}
+      onClick={onClick}
+    >
       {children}
     </button>
   );

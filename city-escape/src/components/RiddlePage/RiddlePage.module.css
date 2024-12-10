@@ -48,13 +48,15 @@
 
 .quiz p {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .label {
   display: flex; /* Align radio button and text in a row */
   align-items: center; /* Vertically align text with the radio button */
   margin-bottom: 12px;
+  text-align: left;
   font-size: 16px;
   cursor: pointer;
   padding: 15px;
@@ -112,4 +114,19 @@
   text-align: center;
   font-size: 16px;
   font-weight: bold;
+}
+
+.image {
+  margin-bottom: 10px;
+}
+
+.successFeedback {
+  text-align: center;
+  color: #22c55e; /* Tailwind's green-500 equivalent */
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+.successFeedback p {
+  margin: 8px 0; /* Adds spacing between each feedback paragraph */
 }
