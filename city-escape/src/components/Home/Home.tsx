@@ -4,10 +4,10 @@ import backgroundImage from "../../assets/budapest-background.jpg";
 const Home = () => {
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat relative"
+      className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat relative px-4 sm:px-6 md:px-8"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundPosition: "0% 5%",
+        backgroundPosition: "center top", // Adjust the background position to show more of the upper part
       }}
     >
       {/* Overlay */}
