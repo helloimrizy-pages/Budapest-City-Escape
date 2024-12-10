@@ -71,7 +71,7 @@ const HowItWorks = () => {
           <img
             src={WhatDoYouNeedLogo}
             alt="Placeholder"
-            className="w-1/2 h-auto object-contain"
+            className="w-1/2 h-auto object-contain p-8"
           />
         </div>
       </div>
