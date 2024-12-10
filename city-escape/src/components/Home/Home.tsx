@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import backgroundImage from "../../assets/budapest-background.jpg";
 
 const Home = () => {
@@ -21,12 +22,12 @@ const Home = () => {
           Discover the hidden treasures of Budapest while solving fun riddles. A
           perfect blend of history, exploration, and entertainment awaits!
         </p>
-        <a
-          href="/map"
+        <Link
+          to="/map"
           className="px-6 py-3 bg-white bg-opacity-30 text-white rounded-md shadow-md hover:bg-opacity-40 transition"
         >
           Start the Game
-        </a>
+        </Link>
       </div>
     </div>
   );
