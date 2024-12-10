@@ -20,7 +20,7 @@ fi
 directories=("src/components" "src/styles" "src/pages")
 
 # List of specific files to include
-specific_files=("index.html" "src/App.tsx" "src/main.tsx")
+specific_files=("index.html" "src/App.tsx" "src/main.tsx" "custom.d.ts")
 
 # List of file types to ignore
 ignore_files=("*.ico" "*.png" "*.jpg" "*.jpeg" "*.gif" "*.svg")

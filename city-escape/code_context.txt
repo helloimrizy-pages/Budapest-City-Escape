@@ -1,13 +1,15 @@
 // File: src/components/Footer/Footer.tsx
-import React from "react";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 
 const Footer = () => {
   const location = useLocation();
 
-  // If the current path is "/riddle", do not show the footer
-  if (location.pathname === "/riddle") {
+  // If on the map page or any riddle page, do not show the navbar
+  if (
+    location.pathname === "/map" ||
+    /^\/riddle\/\d+$/.test(location.pathname) // Matches paths like /riddle/1, /riddle/2, etc.
+  ) {
     return null;
   }
 
@@ -106,7 +108,6 @@ const Footer = () => {
 export default Footer;
 
 // File: src/components/Home/Home.tsx
-import React from "react";
 import backgroundImage from "../../assets/budapest-background.jpg";
 
 const Home = () => {
@@ -194,7 +195,7 @@ export default Home;
 }
 
 // File: src/components/Map/Map.tsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MapContainer, Marker, Popup, TileLayer, GeoJSON } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import Button from "../Shared/Button";
@@ -228,10 +229,20 @@ const Map = () => {
     setMapStyle(style);
   };
 
-  const handleProceed = () => {
+  interface Passcodes {
+    [key: number]: string;
+  }
+
+  const handleProceed = (riddleId: number) => {
     const passcode = prompt("Enter the passcode to proceed:");
-    if (passcode === "1234") {
-      navigate("/riddle");
+    const passcodes: Passcodes = {
+      1: "1234",
+      2: "5678",
+      3: "abcd",
+    };
+
+    if (passcode === passcodes[riddleId]) {
+      navigate(`/riddle/${riddleId}`);
     } else {
       alert("Incorrect passcode. Try again!");
     }
@@ -289,25 +300,25 @@ const Map = () => {
   const popupContent1 = createPopupContent(
     "Kálvin Square (Former Gate)",
     "https://welovebudapest.com/i/9f/kalvin4.exact1980w.jpg",
-    `Kálvin tér, once situated near the medieval city wall of Pest, reveals layers of history beneath today’s modern square. Archaeological investigations have uncovered remnants of these defensive structures, offering a glimpse into how this bustling central area was once fortified against threats. Standing here connects you to centuries of Budapest’s evolving story, from fortified frontier to vibrant urban hub.`,
+    "Kálvin tér, once situated near the medieval city wall of Pest, reveals layers of history beneath today’s modern square. Archaeological investigations have uncovered remnants of these defensive structures, offering a glimpse into how this bustling central area was once fortified against threats. Standing here connects you to centuries of Budapest’s evolving story, from fortified frontier to vibrant urban hub.",
     [47.48934006387308, 19.061237053399193],
-    handleProceed
+    () => handleProceed(1) // Pass riddleId 1
   );
 
   const popupContent2 = createPopupContent(
     "Playground at Bástya Street",
     "https://pestbuda.hu/uploads/media/news/0001/05/thumb_4140_news_big.jpg",
-    `The playground at Bástya utca intertwines everyday leisure with deep-rooted history. Here, where children now play, traces of Pest’s medieval city wall once stood as guardians of the town. This modern urban spot invites you to reflect on centuries past, as the laughter of today’s families echoes amid stones that once fortified the city’s heart.`,
+    "The playground at Bástya utca intertwines everyday leisure with deep-rooted history. Here, where children now play, traces of Pest’s medieval city wall once stood as guardians of the town. This modern urban spot invites you to reflect on centuries past, as the laughter of today’s families echoes amid stones that once fortified the city’s heart.",
     [47.48940736567986, 19.05978125525111],
-    handleProceed
+    () => handleProceed(2) // Pass riddleId 2
   );
 
   const popupContent3 = createPopupContent(
     "Residential Building on the Old Wall",
     "https://welovebudapest.com/i/8e/varosfal_korosi-tamas_20160330.exact1980w.jpg",
-    `This residential building stands atop what once formed part of Pest’s medieval city wall. Beneath its foundations lie centuries of layered defense, now woven quietly into everyday living spaces. Within these modern walls, echoes of an older city linger, bridging the past and present in the heart of Budapest.`,
+    "This residential building stands atop what once formed part of Pest’s medieval city wall. Beneath its foundations lie centuries of layered defense, now woven quietly into everyday living spaces. Within these modern walls, echoes of an older city linger, bridging the past and present in the heart of Budapest.",
     [47.49147045884514, 19.060478228267108],
-    handleProceed
+    () => handleProceed(3) // Pass riddleId 3
   );
 
   return (
@@ -353,14 +364,32 @@ const Map = () => {
       <MapContainer
         center={[47.4894285791889, 19.059757146314627]}
         zoom={13}
+        minZoom={12} // Prevent zooming out too far
+        maxZoom={17} // Adjust based on your tiles
         scrollWheelZoom={true}
         className="w-full h-full"
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.carto.com/">CartoDB</a>'
-          url={tileStyleURLs[mapStyle]}
-        />
-
+        {/* Dynamically Render the Base Tile Layer */}
+        {mapStyle !== "local" ? (
+          <TileLayer
+            url={tileStyleURLs[mapStyle]}
+            attribution='&copy; <a href="https://www.carto.com/">CartoDB</a>'
+          />
+        ) : (
+          <>
+            {/* Light Base Map for Local Style */}
+            <TileLayer
+              url={tileStyleURLs.voyager}
+              attribution='&copy; <a href="https://www.carto.com/">CartoDB</a>'
+            />
+            {/* Local Tile Overlay */}
+            <TileLayer
+              url={tileStyleURLs.local}
+              noWrap={true} // Prevent wrapping of tiles
+              opacity={0.7} // Set transparency for overlay
+            />
+          </>
+        )}
         {/* Marker 1 */}
         <Marker
           position={[47.48934006387308, 19.061237053399193]}
@@ -397,15 +426,17 @@ export default Map;
 export { default } from "./Map";
 
 // File: src/components/NavBar/NavBar.tsx
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 
 const Navbar = () => {
   const location = useLocation();
 
-  // If on the map page, do not show the navbar
-  if (location.pathname === "/map" || location.pathname === "/riddle") {
+  // If on the map page or any riddle page, do not show the navbar
+  if (
+    location.pathname === "/map" ||
+    /^\/riddle\/\d+$/.test(location.pathname) // Matches paths like /riddle/1, /riddle/2, etc.
+  ) {
     return null;
   }
 
@@ -519,13 +550,15 @@ export default Navbar;
 
 .quiz p {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .label {
   display: flex; /* Align radio button and text in a row */
   align-items: center; /* Vertically align text with the radio button */
   margin-bottom: 12px;
+  text-align: left;
   font-size: 16px;
   cursor: pointer;
   padding: 15px;
@@ -585,111 +618,330 @@ export default Navbar;
   font-weight: bold;
 }
 
+.image {
+  margin-bottom: 10px;
+}
+
+.successFeedback {
+  text-align: center;
+  color: #22c55e; /* Tailwind's green-500 equivalent */
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+.successFeedback p {
+  margin: 8px 0; /* Adds spacing between each feedback paragraph */
+}
+
 // File: src/components/RiddlePage/RiddlePage.tsx
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+// RiddlePage.tsx
+
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import FeedbackMessage from "../Shared/FeedbackMessage";
 import Button from "../Shared/Button";
 import styles from "./RiddlePage.module.css";
 
-interface QuestionData {
+interface Question {
   question: string;
-  answers: string[];
+  options: string[];
   correctAnswer: string;
 }
 
-const RiddlePage = () => {
+interface Riddle {
+  title: string;
+  questions: Question[];
+  images: string[]; // Array of image URLs
+  description: string[];
+  successFeedback: string[]; // Specific feedback for each riddle
+}
+
+const riddles: Record<string, Riddle> = {
+  "1": {
+    title: "Kálvin Square (Former Gate)",
+    questions: [
+      {
+        question:
+          "How do you think the presence of physical walls, like the city wall, influenced children's play and social interactions in this area?",
+        options: [
+          "They restricted where children could play, forcing them to remain close to family and familiar faces.",
+          "They encouraged children to creatively use limited space, finding new ways to interact despite barriers.",
+          "They had no real effect; children’s play remained unchanged regardless of physical boundaries.",
+          "They sparked curiosity about what lay beyond the walls, influencing children to imagine new worlds.",
+        ],
+        correctAnswer:
+          "They encouraged children to creatively use limited space, finding new ways to interact despite barriers.",
+      },
+      {
+        question:
+          "In what ways do adults’ complaints create invisible walls in communication with children?",
+        options: [
+          "Complaints can make children feel misunderstood and hesitant to share their thoughts.",
+          "Complaints serve as harmless expressions that don’t significantly affect children’s willingness to talk.",
+          "Complaints can create an atmosphere of tension, limiting open and honest conversation.",
+          "Complaints lead children to distrust adults, viewing them as constantly critical rather than supportive.",
+        ],
+        correctAnswer:
+          "Complaints can make children feel misunderstood and hesitant to share their thoughts.",
+      },
+      {
+        question:
+          "Can you recall a time when a complaint disrupted a conversation or interaction? What was the outcome?",
+        options: [
+          "The complaint caused everyone to fall silent, halting the flow of the conversation.",
+          "The complaint encouraged people to address the issue openly, ultimately improving understanding.",
+          "The complaint was ignored, and the conversation continued smoothly without acknowledgment.",
+          "The complaint led some participants to withdraw and others to speak more cautiously, altering the group’s dynamic.",
+        ],
+        correctAnswer:
+          "The complaint led some participants to withdraw and others to speak more cautiously, altering the group’s dynamic.",
+      },
+    ],
+    images: [
+      "https://welovebudapest.com/i/9f/kalvin4.exact1980w.jpg",
+      "https://welovebudapest.com/i/13/kalvin1844vagy1852.exact1980w.jpg",
+    ],
+    description: [
+      "Long ago, the area around Bástya utca was marked by the presence of Pest’s old city wall—an imposing structure that once determined who could enter, leave, or linger. This defensive barrier, while offering safety from outside threats, also created subtle divisions within the community. Life thrived inside and outside its borders, but the wall’s presence encouraged certain patterns of behavior, shaping how residents interacted, moved, and played.",
+      "Over time, as the city expanded and the old fortifications lost their purpose, these walls were removed or integrated into the urban fabric. Today, in place of that once formidable boundary, a playground stands—an open, welcoming space dedicated to children’s play. Here, laughter and imagination flow freely, unfettered by the physical restrictions that characterized this spot centuries ago. Kids chase each other, invent games, and communicate without the heavy weight of history. They cross “boundaries” made of chalk lines rather than stone, breaking down social barriers through simple acts of cooperation, curiosity, and kindness.",
+      "However, while children generally approach the world with openness, adults sometimes construct their own invisible barriers through habits like complaining or criticizing. These intangible “walls” of negativity can limit understanding and discourage genuine connection. Within this playground setting, we’re reminded that human interactions—whether in childhood or adulthood—can be shaped by the presence or absence of both visible and invisible barriers. Overcoming these obstacles, whether physical stones or critical tones, leads to healthier, more vibrant communities.",
+    ],
+    successFeedback: [
+      "Great job! You've completed the riddle.",
+      "Passcode for next location 'Playground at Bástya Street': 1234",
+    ],
+  },
+  "2": {
+    title: "Playground at Bástya Street",
+    questions: [
+      {
+        question:
+          "How do you think the presence of physical walls, like the city wall, influenced children's play and social interactions in this area?",
+        options: [
+          "The walls restricted children’s access to open spaces, encouraging creativity in limited areas.",
+          "The walls provided a sense of safety, allowing children to play freely without external threats.",
+          "The walls created curiosity about what lay beyond, fostering imaginative play.",
+          "All of the above.",
+        ],
+        correctAnswer: "All of the above.",
+      },
+      {
+        question:
+          "In what ways do adults' complaints create invisible walls in communication with children?",
+        options: [
+          "Complaints make children feel unheard or misunderstood, reducing their willingness to communicate openly.",
+          "Complaints help children understand their mistakes and foster better behavior.",
+          "Complaints create an atmosphere of tension, discouraging natural and honest interactions.",
+          "Both A and C.",
+        ],
+        correctAnswer: "Both A and C.",
+      },
+      {
+        question:
+          "Can you recall a time when a complaint disrupted a conversation or interaction? What was the outcome?",
+        options: [
+          "The complaint led to silence, stopping the conversation altogether.",
+          "The complaint encouraged reflection, leading to a constructive outcome.",
+          "The complaint caused tension, resulting in misunderstanding or avoidance.",
+          "Both A and C.",
+        ],
+        correctAnswer: "Both A and C.",
+      },
+    ],
+    images: [
+      "https://pestbuda.hu/uploads/media/news/0001/05/thumb_4140_news_big.jpg",
+    ],
+    description: [
+      "The playground at Bástya utca, vibrant with the laughter of children today, contrasts sharply with its historical roots. Centuries ago, this area was bustling with life, situated near the medieval city wall of Pest. The wall, while offering protection from external threats, created both physical and social divisions within the community. Inside the wall, children played in limited, enclosed spaces, fostering creativity in how they interacted and used their surroundings. Meanwhile, outside the wall, life was different, often leading to curiosity and a longing to explore the unknown.",
+      "As the city walls were demolished over time to accommodate urban growth, the area transformed into an open space. Today, the playground symbolizes freedom and connection, where children freely chase one another, invent games, and communicate without barriers. However, this openness is often in contrast to how adults engage with one another. Adults frequently construct emotional barriers—'invisible walls'—through habits like complaining or criticism. These intangible walls can stifle relationships, hinder communication, and limit understanding between generations.",
+      "The playground reminds us that while physical walls can be torn down, the invisible barriers we create in our interactions often persist. It challenges us to reflect on how we build or break these walls in our daily lives, especially when interacting with children, whose natural openness and curiosity can inspire us to communicate more freely and authentically.",
+    ],
+    successFeedback: [
+      "Great job! You've completed the riddle.",
+      "Passcode for next location 'Residential Building on the Old Wall': abcd",
+    ],
+  },
+  "3": {
+    title: "Residential Building on the Old Wall",
+    questions: [
+      {
+        question:
+          "What challenges did residents face when the city wall was built or demolished in terms of their sense of community?",
+        options: [
+          "The city wall restricted communication, isolating residents within a small, close-knit group.",
+          "The demolition of the wall brought unfamiliar people into the community, leading to tension.",
+          "Residents struggled to adapt to new spaces, losing the sense of safety the wall provided.",
+          "All of the above.",
+        ],
+        correctAnswer: "All of the above.",
+      },
+      {
+        question:
+          "How does complaining about neighbors or local issues contribute to a sense of division among residents?",
+        options: [
+          "Complaints can foster mistrust and tension, making residents hesitant to engage openly.",
+          "Complaints encourage residents to work together to address shared concerns.",
+          "Complaints are harmless and rarely affect the relationships between neighbors.",
+          "Complaints create visible divisions, such as different groups avoiding one another.",
+        ],
+        correctAnswer:
+          "Complaints can foster mistrust and tension, making residents hesitant to engage openly.",
+      },
+      {
+        question:
+          "Reflect on how you communicate your concerns about your living environment. Do you find it builds bridges or walls with your neighbors?",
+        options: [
+          "Sharing concerns constructively can lead to collaboration and mutual understanding.",
+          "Expressing frustration without resolution often increases tension and divides the community.",
+          "Avoiding communication altogether prevents conflict but also limits opportunities for unity.",
+          "Both A and B.",
+        ],
+        correctAnswer: "Both A and B.",
+      },
+    ],
+    images: [
+      "https://welovebudapest.com/i/8e/varosfal_korosi-tamas_20160330.exact1980w.jpg",
+      "https://welovebudapest.com/i/d5/varosfal_korosi-tamas_20160330.exact1980w.jpg",
+    ],
+    description: [
+      "Nestled within the heart of Budapest, the residential garden of Múzeum körút 31-33 offers a quiet sanctuary away from the bustling streets. Historically, this area served as a boundary between the protected city and its surrounding countryside, where residents sought refuge behind the city wall. While the walls provided physical safety, they also created a psychological divide, limiting interactions between those inside and outside the walls.",
+      "When the city wall was eventually demolished to make way for urban expansion, it symbolized the transition from isolation to integration. This shift was bittersweet for many residents—while it allowed for new connections and opportunities, it also brought challenges such as increased noise, loss of privacy, and a blending of diverse social classes that sometimes led to conflict.",
+      "Today, the garden reflects these historical tensions. It is a private space where residents can retreat, offering a sense of calm and solitude. However, it also represents how urban spaces can inadvertently foster division. Complaints about noise, maintenance, or neighborly disputes are common and can create invisible walls between residents, discouraging a sense of unity. The garden reminds us that while physical barriers may disappear, emotional and social divides often linger. It challenges us to consider how we engage with our communities—do we use our words and actions to build bridges, or do we unintentionally create walls?",
+    ],
+    successFeedback: ["Great job! You have finished the game!"],
+  },
+};
+
+const RiddlePage: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // Extract dynamic data from location state
-  const questions: QuestionData[] = location.state?.questions || [];
-  const imageSrc =
-    location.state?.imageSrc ||
-    "https://pestbuda.hu/uploads/media/news/0001/03/thumb_2956_news_big.jpg";
-  const description =
-    location.state?.description || "Default description about the location.";
-  const storyline = location.state?.storyline || (
-    <p>This is a general storyline to introduce the riddle.</p>
-  );
-
-  // Manage selected answers and feedback
-  const [selectedAnswers, setSelectedAnswers] = useState<(string | null)[]>(
-    () => questions.map(() => null)
-  );
+  interface RouteParams extends Record<string, string | undefined> {
+    riddleId: string;
+  }
+  const { riddleId } = useParams<RouteParams>();
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    Record<number, string | null>
+  >({});
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  // Handle answer selection
-  const handleSelectAnswer = (questionIndex: number, answer: string) => {
-    const newSelected = [...selectedAnswers];
-    newSelected[questionIndex] = answer;
-    setSelectedAnswers(newSelected);
+  const riddle = riddleId && riddles[riddleId] ? riddles[riddleId] : undefined;
+
+  useEffect(() => {
+    if (!riddle) {
+      navigate("/");
+    }
+  }, [riddle, navigate]);
+
+  if (!riddle) {
+    return null;
+  }
+
+  const handleAnswer = () => {
+    const incorrectAnswers = riddle.questions.some(
+      (q, i) => selectedAnswers[i] !== q.correctAnswer
+    );
+
+    if (incorrectAnswers) {
+      setFeedback("Incorrect. Try again!");
+    } else {
+      setFeedback(
+        "Please proceed to the next location by clicking the 'close' button below."
+      );
+    }
   };
 
-  // Check all answers
-  const handleAnswer = () => {
-    const allAnswered = selectedAnswers.every((answer) => answer !== null);
-    if (!allAnswered) {
-      setFeedback("Please answer all questions before submitting!");
+  const handleAnswerChange = (index: number, answer: string) => {
+    if (
+      feedback ===
+      "Please proceed to the next location by clicking the 'close' button below."
+    )
       return;
-    }
-
-    const allCorrect = questions.every(
-      (q, i) => q.correctAnswer === selectedAnswers[i]
-    );
-    setFeedback(allCorrect ? "Correct! Great job!" : "Incorrect. Try again!");
+    setSelectedAnswers((prev) => ({ ...prev, [index]: answer }));
   };
 
   const handleClose = () => {
     setFeedback(null);
-    navigate("/");
+    navigate("/map");
   };
 
   return (
     <div className={styles.container}>
-      {/* Header */}
       <div className={styles.header}>
-        <h1>Discover the Hidden Ruins of Budapest’s Medieval City Wall</h1>
+        <h1>{riddle.title}</h1>
       </div>
-
-      {/* Storyline Section */}
-      <div className={styles.storyline}>{storyline}</div>
-
-      {/* Description Section */}
       <div className={styles.content}>
-        <img src={imageSrc} alt="Location" className={styles.image} />
-        <p className={styles.description}>{description}</p>
+        <div className={styles.images}>
+          {riddle.images.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`Riddle ${riddleId} Image ${index + 1}`}
+              className={styles.image}
+            />
+          ))}
+        </div>
+        {riddle.description.map((paragraph, index) => (
+          <p key={index} className={styles.text}>
+            {paragraph}
+          </p>
+        ))}
       </div>
 
-      {/* Quiz Section */}
       <div className={styles.quiz}>
-        {questions.map((q, questionIndex) => (
-          <div key={questionIndex} className="mb-4">
+        {riddle.questions.map((q, index) => (
+          <div key={index} className="mb-4">
             <p>{q.question}</p>
-            {q.answers.map((option) => (
+            {q.options.map((option) => (
               <label key={option} className={styles.label}>
                 <input
                   type="radio"
-                  name={`answer_${questionIndex}`}
+                  name={`question-${index}`}
                   value={option}
-                  onChange={() => handleSelectAnswer(questionIndex, option)}
+                  disabled={
+                    feedback ===
+                    "Please proceed to the next location by clicking the 'close' button below."
+                  }
+                  onChange={() => handleAnswerChange(index, option)}
                 />
                 {option}
               </label>
             ))}
+            {index < riddle.questions.length - 1 && (
+              <hr className="my-4 border-t border-gray-300 mt-8" />
+            )}
           </div>
         ))}
-        <div className={styles.buttonContainer}>
-          <Button onClick={handleAnswer}>Submit Answer</Button>
-        </div>
+        {feedback !==
+          "Please proceed to the next location by clicking the 'close' button below." && (
+          <div className={styles.buttonContainer}>
+            <Button onClick={handleAnswer}>Submit Answers</Button>
+          </div>
+        )}
+
+        {feedback ===
+          "Please proceed to the next location by clicking the 'close' button below." && (
+          <div className={styles.successFeedback}>
+            {riddle.successFeedback.map((feedbackParagraph, index) => (
+              <p key={index}>{feedbackParagraph}</p>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Feedback Message */}
       {feedback && (
         <FeedbackMessage
           message={feedback}
-          type={feedback === "Correct! Great job!" ? "success" : "error"}
-          onClose={feedback === "Correct! Great job!" ? handleClose : undefined}
+          type={
+            feedback ===
+            "Please proceed to the next location by clicking the 'close' button below."
+              ? "success"
+              : "error"
+          }
+          onClose={
+            feedback ===
+            "Please proceed to the next location by clicking the 'close' button below."
+              ? handleClose
+              : undefined
+          }
         />
       )}
     </div>
@@ -962,8 +1214,6 @@ input {
 }
 
 // File: src/pages/AboutUs/AboutUs.tsx
-import React from "react";
-
 const AboutUs = () => {
   return (
     <div className="bg-white-100 py-16 bg-[#0d1321]">
@@ -1062,8 +1312,6 @@ const AboutUs = () => {
 export default AboutUs;
 
 // File: src/pages/ContactUs/ContactUs.tsx
-import React from "react";
-
 const ContactUs = () => {
   return (
     <div className="py-16 bg-[#0d1321]">
@@ -1323,7 +1571,6 @@ const FAQ = () => {
 export default FAQ;
 
 // File: src/pages/HowItWorks/HowItWorks.tsx
-import React from "react";
 import BudapestLogo from "../../assets/logo.png";
 import WhatDoYouNeedLogo from "../../assets/need.png";
 import WhoCanPlayLogo from "../../assets/people.png";
@@ -1500,7 +1747,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/map" element={<Map />} />
-        <Route path="/riddle" element={<RiddlePage />} />
+        <Route path="/riddle/:riddleId" element={<RiddlePage />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/about" element={<AboutUs />} />
