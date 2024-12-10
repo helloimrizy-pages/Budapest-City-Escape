@@ -17,7 +17,7 @@ if [ -f "$output_file" ]; then
 fi
 
 # List of directories to look for
-directories=("src/components" "src/styles")
+directories=("src/components" "src/styles" "src/pages")
 
 # List of specific files to include
 specific_files=("index.html" "src/App.tsx" "src/main.tsx")

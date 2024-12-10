@@ -1,3 +1,148 @@
+// File: src/components/Footer/Footer.tsx
+import React from "react";
+import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+
+const Footer = () => {
+  const location = useLocation();
+
+  // If the current path is "/riddle", do not show the footer
+  if (location.pathname === "/riddle") {
+    return null;
+  }
+
+  const isHomePage = location.pathname === "/";
+
+  return (
+    <footer
+      className={`${
+        isHomePage ? "bg-black" : "bg-[#0d1321]"
+      } text-white py-10 relative z-10`}
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Top section with navigation links */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <div className="mb-6 md:mb-0">
+            <h2 className="text-2xl font-bold">City Escape Games</h2>
+          </div>
+          <nav className="flex space-x-4">
+            <a
+              href="/about"
+              className="hover:text-gray-300 transition-colors duration-200"
+            >
+              About Us
+            </a>
+            <a
+              href="/faq"
+              className="hover:text-gray-300 transition-colors duration-200"
+            >
+              FAQ
+            </a>
+            <a
+              href="/contact"
+              className="hover:text-gray-300 transition-colors duration-200"
+            >
+              Contact Us
+            </a>
+            <a
+              // href=""
+              className="hover:text-gray-300 transition-colors duration-200"
+            >
+              Terms & Conditions
+            </a>
+            <a
+              // href=""
+              className="hover:text-gray-300 transition-colors duration-200"
+            >
+              Privacy Policy
+            </a>
+          </nav>
+        </div>
+
+        {/* Divider */}
+        <hr className="border-t border-white-300 mb-8 opacity-20" />
+
+        {/* Bottom section with social media */}
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <p className="text-sm mb-4 md:mb-0">
+            &copy; {new Date().getFullYear()} City Escape Games. All rights
+            reserved.
+          </p>
+          <div className="flex space-x-6">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-300 transition-colors duration-200"
+              aria-label="Facebook"
+            >
+              <FaFacebook size={20} />
+            </a>
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-300 transition-colors duration-200"
+              aria-label="Twitter"
+            >
+              <FaTwitter size={20} />
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-300 transition-colors duration-200"
+              aria-label="Instagram"
+            >
+              <FaInstagram size={20} />
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+
+// File: src/components/Home/Home.tsx
+import React from "react";
+import backgroundImage from "../../assets/budapest-background.jpg";
+
+const Home = () => {
+  return (
+    <div
+      className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat relative"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundPosition: "0% 5%",
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center">
+        <h1 className="text-5xl font-bold text-white mb-6">
+          Welcome to Explore Budapest!
+        </h1>
+        <p className="text-xl text-white max-w-2xl mb-8">
+          Discover the hidden treasures of Budapest while solving fun riddles. A
+          perfect blend of history, exploration, and entertainment awaits!
+        </p>
+        <a
+          href="/map"
+          className="px-6 py-3 bg-white bg-opacity-30 text-white rounded-md shadow-md hover:bg-opacity-40 transition"
+        >
+          Start the Game
+        </a>
+      </div>
+    </div>
+  );
+};
+
+export default Home;
+
 // File: src/components/Map/Map.module.css
 .map {
   height: 100vh;
@@ -49,14 +194,39 @@
 }
 
 // File: src/components/Map/Map.tsx
-import React from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import React, { useState, useEffect } from "react";
+import { MapContainer, Marker, Popup, TileLayer, GeoJSON } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import Button from "../Shared/Button";
-import styles from "./Map.module.css";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css"; // Ensure you have this import
 
 const Map = () => {
   const navigate = useNavigate();
+
+  const [geojsonData, setGeojsonData] = useState(null);
+
+  useEffect(() => {
+    fetch("/data.json")
+      .then((response) => response.json())
+      .then((data) => setGeojsonData(data))
+      .catch((error) => console.error("Error loading GeoJSON:", error));
+  }, []);
+
+  const tileStyleURLs = {
+    light_all: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+    dark_all: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    voyager:
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    local: "/tiles/{z}/{x}/{y}.png",
+  };
+
+  const [mapStyle, setMapStyle] =
+    useState<keyof typeof tileStyleURLs>("voyager");
+
+  const handleStyleChange = (style: keyof typeof tileStyleURLs) => {
+    setMapStyle(style);
+  };
 
   const handleProceed = () => {
     const passcode = prompt("Enter the passcode to proceed:");
@@ -67,58 +237,236 @@ const Map = () => {
     }
   };
 
-  return (
-    <MapContainer
-      center={[47.4894285791889, 19.059757146314627]}
-      zoom={13}
-      scrollWheelZoom={true}
-      className={styles.map}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.carto.com/">CartoDB</a>'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-      />
+  const numberIcon = (number: number) =>
+    L.divIcon({
+      className: "",
+      html: `<div class="flex items-center justify-center w-8 h-8 rounded-full bg-red-600 text-white font-bold">${number}</div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32],
+    });
 
-      <Marker position={[47.4894285791889, 19.059757146314627]}>
-        <Popup>
-          <h3>City Wall Budapest - Bástya Street</h3>
-          <img
-            src="https://pestbuda.hu/uploads/media/news/0001/03/thumb_2956_news_big.jpg"
-            alt="City Wall Budapest"
-            style={imageStyle}
-          />
-          <p>
-            Archaeologists have carried out excavations in Bástya Street in the
-            Pest city center, where part of Pest's city wall once stood. The dig
-            led to finds from the 13th century to the Ottoman Period, including
-            the remains of houses, kilns, and ditches.
-          </p>
-          <p>
-            <em>
-              <strong>
-                Please scan the QR code at the location to reveal the passcode
-                and proceed to the riddle.
-              </strong>
-            </em>
-          </p>
-          <Button onClick={handleProceed}>Proceed to the Riddle</Button>
-        </Popup>
-      </Marker>
-    </MapContainer>
+  const createPopupContent = (
+    title: string,
+    imgSrc: string,
+    description: string,
+    coords: [number, number],
+    handleProceed: () => void
+  ) => (
+    <div className="space-y-4">
+      <h3 className="text-xl font-bold">{title}</h3>
+      <img src={imgSrc} alt={title} className="w-full h-auto rounded-lg mb-2" />
+      <p>{description}</p>
+      <p>
+        <em>
+          <strong>
+            Please scan the QR code at this location to reveal the passcode and
+            proceed to the riddle.
+          </strong>
+        </em>
+      </p>
+      <div className="flex gap-2 justify-center">
+        <Button
+          onClick={handleProceed}
+          className="bg-white text-black border border-gray-300 shadow px-4 py-2 rounded hover:bg-gray-100 transition-colors duration-150"
+        >
+          Proceed
+        </Button>
+        <Button
+          onClick={() => {
+            const [lat, lng] = coords;
+            const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+            window.open(mapsUrl, "_blank");
+          }}
+          className="bg-white text-black border border-gray-300 shadow px-4 py-2 rounded hover:bg-gray-100 transition-colors duration-150"
+        >
+          Navigate
+        </Button>
+      </div>
+    </div>
+  );
+
+  const popupContent1 = createPopupContent(
+    "Kálvin Square (Former Gate)",
+    "https://welovebudapest.com/i/9f/kalvin4.exact1980w.jpg",
+    `Kálvin tér, once situated near the medieval city wall of Pest, reveals layers of history beneath today’s modern square. Archaeological investigations have uncovered remnants of these defensive structures, offering a glimpse into how this bustling central area was once fortified against threats. Standing here connects you to centuries of Budapest’s evolving story, from fortified frontier to vibrant urban hub.`,
+    [47.48934006387308, 19.061237053399193],
+    handleProceed
+  );
+
+  const popupContent2 = createPopupContent(
+    "Playground at Bástya Street",
+    "https://pestbuda.hu/uploads/media/news/0001/05/thumb_4140_news_big.jpg",
+    `The playground at Bástya utca intertwines everyday leisure with deep-rooted history. Here, where children now play, traces of Pest’s medieval city wall once stood as guardians of the town. This modern urban spot invites you to reflect on centuries past, as the laughter of today’s families echoes amid stones that once fortified the city’s heart.`,
+    [47.48940736567986, 19.05978125525111],
+    handleProceed
+  );
+
+  const popupContent3 = createPopupContent(
+    "Residential Building on the Old Wall",
+    "https://welovebudapest.com/i/8e/varosfal_korosi-tamas_20160330.exact1980w.jpg",
+    `This residential building stands atop what once formed part of Pest’s medieval city wall. Beneath its foundations lie centuries of layered defense, now woven quietly into everyday living spaces. Within these modern walls, echoes of an older city linger, bridging the past and present in the heart of Budapest.`,
+    [47.49147045884514, 19.060478228267108],
+    handleProceed
+  );
+
+  return (
+    <div className="relative w-full h-screen">
+      {/* Fixed Buttons Container */}
+      <div className="fixed z-[9999] top-1/2 left-2 -translate-y-1/2 bg-white rounded p-2 flex flex-col gap-2 border border-gray shadow-lg">
+        <button
+          onClick={() => handleStyleChange("light_all")}
+          className="p-1 cursor-pointer border-none rounded text-sm hover:bg-gray-200"
+        >
+          Light
+        </button>
+        <hr className="my-1 border-t border-gray-300" />
+        <button
+          onClick={() => handleStyleChange("dark_all")}
+          className="p-1 cursor-pointer border-none rounded text-sm hover:bg-gray-200"
+        >
+          Dark
+        </button>
+        <hr className="my-1 border-t border-gray-300" />
+        <button
+          onClick={() => handleStyleChange("voyager")}
+          className="p-1 cursor-pointer border-none rounded text-sm hover:bg-gray-200"
+        >
+          Voyager
+        </button>
+        <hr className="my-1 border-t border-gray-300" />
+        <button
+          onClick={() => handleStyleChange("local")}
+          className="p-1 cursor-pointer border-none rounded text-sm hover:bg-gray-200"
+        >
+          Local Tiles
+        </button>
+        <hr className="my-1 border-t border-gray-300" />
+        <button
+          onClick={() => navigate("/")}
+          className="p-1 cursor-pointer border-none rounded text-sm hover:bg-gray-200"
+        >
+          Exit
+        </button>
+      </div>
+
+      <MapContainer
+        center={[47.4894285791889, 19.059757146314627]}
+        zoom={13}
+        scrollWheelZoom={true}
+        className="w-full h-full"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.carto.com/">CartoDB</a>'
+          url={tileStyleURLs[mapStyle]}
+        />
+
+        {/* Marker 1 */}
+        <Marker
+          position={[47.48934006387308, 19.061237053399193]}
+          icon={numberIcon(1)}
+        >
+          <Popup>{popupContent1}</Popup>
+        </Marker>
+
+        {/* Marker 2 */}
+        <Marker
+          position={[47.48940736567986, 19.05978125525111]}
+          icon={numberIcon(2)}
+        >
+          <Popup>{popupContent2}</Popup>
+        </Marker>
+
+        {/* Marker 3 */}
+        <Marker
+          position={[47.49147045884514, 19.060478228267108]}
+          icon={numberIcon(3)}
+        >
+          <Popup>{popupContent3}</Popup>
+        </Marker>
+
+        {geojsonData && <GeoJSON data={geojsonData} />}
+      </MapContainer>
+    </div>
   );
 };
 
 export default Map;
 
-const imageStyle: React.CSSProperties = {
-  width: "100%", // Make the image responsive
-  height: "auto",
-  borderRadius: "8px",
-  marginBottom: "10px",
-};
-
 // File: src/components/Map/index.ts
 export { default } from "./Map";
+
+// File: src/components/NavBar/NavBar.tsx
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import Logo from "../../assets/logo.png";
+
+const Navbar = () => {
+  const location = useLocation();
+
+  // If on the map page, do not show the navbar
+  if (location.pathname === "/map" || location.pathname === "/riddle") {
+    return null;
+  }
+
+  return (
+    <nav className="absolute top-0 left-0 w-full z-50 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center space-x-2 text-xl font-bold">
+            <Link to="/">
+              <img
+                src={Logo}
+                alt="Logo"
+                className="w-20 h-auto object-contain"
+              />
+            </Link>
+            <Link
+              to="/"
+              className="text-white hover:text-gray-300 transition-colors duration-200"
+            >
+              Explore Budapest
+            </Link>
+          </div>
+          <div className="hidden md:flex space-x-4">
+            <Link
+              to="/map"
+              className="text-white hover:text-gray-300 transition-colors duration-200"
+            >
+              Start the Game
+            </Link>
+            <Link
+              to="/how-it-works"
+              className="text-white hover:text-gray-300 transition-colors duration-200"
+            >
+              How Does It Work?
+            </Link>
+            <Link
+              to="/faq"
+              className="text-white hover:text-gray-300 transition-colors duration-200"
+            >
+              FAQ
+            </Link>
+            <Link
+              to="/about"
+              className="text-white hover:text-gray-300 transition-colors duration-200"
+            >
+              About Us
+            </Link>
+            <Link
+              to="/contact"
+              className="text-white hover:text-gray-300 transition-colors duration-200"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
 
 // File: src/components/RiddlePage/RiddlePage.module.css
 .container {
@@ -160,6 +508,8 @@ export { default } from "./Map";
 }
 
 .quiz {
+  display: block;
+  text-align: center;
   margin-top: 30px;
   border: 2px solid #ddd;
   padding: 15px;
@@ -197,20 +547,6 @@ export { default } from "./Map";
   cursor: pointer;
 }
 
-.label::before {
-  content: "";
-  position: absolute;
-  left: 10px; /* Space for the custom radio button */
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  border: 2px solid #007bff; /* Primary color border */
-  border-radius: 50%; /* Circular button */
-  background: #ffffff;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
 .label input:checked + &::before {
   background: #007bff; /* Primary color when selected */
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); /* Glow effect */
@@ -232,6 +568,14 @@ export { default } from "./Map";
   color: #007bff; /* Change text color when selected */
 }
 
+.buttonContainer {
+  display: flex;
+  justify-content: center; /* Horizontally center the button */
+  align-items: center; /* Vertically center the button if needed */
+  margin-top: 20px; /* Adjust margin as necessary */
+  width: 100%; /* Ensure the container spans full width */
+}
+
 .feedback {
   margin-top: 20px;
   padding: 15px;
@@ -242,25 +586,58 @@ export { default } from "./Map";
 }
 
 // File: src/components/RiddlePage/RiddlePage.tsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import FeedbackMessage from "../Shared/FeedbackMessage";
 import Button from "../Shared/Button";
 import styles from "./RiddlePage.module.css";
 
+interface QuestionData {
+  question: string;
+  answers: string[];
+  correctAnswer: string;
+}
+
 const RiddlePage = () => {
   const navigate = useNavigate();
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const location = useLocation();
+
+  // Extract dynamic data from location state
+  const questions: QuestionData[] = location.state?.questions || [];
+  const imageSrc =
+    location.state?.imageSrc ||
+    "https://pestbuda.hu/uploads/media/news/0001/03/thumb_2956_news_big.jpg";
+  const description =
+    location.state?.description || "Default description about the location.";
+  const storyline = location.state?.storyline || (
+    <p>This is a general storyline to introduce the riddle.</p>
+  );
+
+  // Manage selected answers and feedback
+  const [selectedAnswers, setSelectedAnswers] = useState<(string | null)[]>(
+    () => questions.map(() => null)
+  );
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const correctAnswer = "Bástya Street";
+  // Handle answer selection
+  const handleSelectAnswer = (questionIndex: number, answer: string) => {
+    const newSelected = [...selectedAnswers];
+    newSelected[questionIndex] = answer;
+    setSelectedAnswers(newSelected);
+  };
 
+  // Check all answers
   const handleAnswer = () => {
-    if (selectedAnswer === correctAnswer) {
-      setFeedback("Correct! Great job!");
-    } else {
-      setFeedback("Incorrect. Try again!");
+    const allAnswered = selectedAnswers.every((answer) => answer !== null);
+    if (!allAnswered) {
+      setFeedback("Please answer all questions before submitting!");
+      return;
     }
+
+    const allCorrect = questions.every(
+      (q, i) => q.correctAnswer === selectedAnswers[i]
+    );
+    setFeedback(allCorrect ? "Correct! Great job!" : "Incorrect. Try again!");
   };
 
   const handleClose = () => {
@@ -270,44 +647,44 @@ const RiddlePage = () => {
 
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
         <h1>Discover the Hidden Ruins of Budapest’s Medieval City Wall</h1>
       </div>
+
+      {/* Storyline Section */}
+      <div className={styles.storyline}>{storyline}</div>
+
+      {/* Description Section */}
       <div className={styles.content}>
-        <img
-          src="https://pestbuda.hu/uploads/media/news/0001/03/thumb_2956_news_big.jpg"
-          alt="City Wall Budapest"
-          className={styles.image}
-        />
-        <p className={styles.text}>
-          Archaeologists have carried out excavations in Bástya Street in the
-          Pest city centre, where part of Pest's city wall once stood. The dig
-          led to finds from the 13th century to the Ottoman Period, including
-          the remains of houses, kilns and ditches. The Budapest History Museum
-          carried out a preliminary excavation of 1–11 Bástya street in
-          preparation of the park and community centre planned for the area by
-          the 5th District Council. The dig was completed between 6 July 2020
-          and 3 September on the northern area of the plot, writes the report by
-          the participating archaeologist Anikó Tóth on regeszet.aquincum.hu.
-        </p>
+        <img src={imageSrc} alt="Location" className={styles.image} />
+        <p className={styles.description}>{description}</p>
       </div>
+
+      {/* Quiz Section */}
       <div className={styles.quiz}>
-        <p>Where is this city wall located?</p>
-        {["Bástya Street", "Ráday Street", "Üllői Street", "Kinizsi utca"].map(
-          (option) => (
-            <label key={option} className={styles.label}>
-              <input
-                type="radio"
-                name="answer"
-                value={option}
-                onChange={() => setSelectedAnswer(option)}
-              />
-              {option}
-            </label>
-          )
-        )}
-        <Button onClick={handleAnswer}>Submit Answer</Button>
+        {questions.map((q, questionIndex) => (
+          <div key={questionIndex} className="mb-4">
+            <p>{q.question}</p>
+            {q.answers.map((option) => (
+              <label key={option} className={styles.label}>
+                <input
+                  type="radio"
+                  name={`answer_${questionIndex}`}
+                  value={option}
+                  onChange={() => handleSelectAnswer(questionIndex, option)}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
+        ))}
+        <div className={styles.buttonContainer}>
+          <Button onClick={handleAnswer}>Submit Answer</Button>
+        </div>
       </div>
+
+      {/* Feedback Message */}
       {feedback && (
         <FeedbackMessage
           message={feedback}
@@ -331,9 +708,17 @@ interface ButtonProps {
   onClick: () => void;
   children: React.ReactNode;
   style?: React.CSSProperties;
+  className?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ onClick, children, style }) => {
+const Button: React.FC<ButtonProps> = ({
+  onClick,
+  children,
+  style,
+  className,
+}) => {
+  // If you still want some default styling when no className is provided, you can keep the defaultStyle.
+  // Otherwise, remove defaultStyle for a purely className-based approach.
   const defaultStyle: React.CSSProperties = {
     backgroundColor: "#007bff",
     color: "#fff",
@@ -347,7 +732,11 @@ const Button: React.FC<ButtonProps> = ({ onClick, children, style }) => {
   };
 
   return (
-    <button style={defaultStyle} onClick={onClick}>
+    <button
+      className={className}
+      style={className ? style : defaultStyle}
+      onClick={onClick}
+    >
       {children}
     </button>
   );
@@ -405,6 +794,72 @@ const FeedbackMessage: React.FC<FeedbackMessageProps> = ({
 };
 
 export default FeedbackMessage;
+
+// File: src/components/Shared/PopupContent.tsx
+import React from "react";
+import Button from "../Shared/Button";
+
+interface Question {
+  question: string;
+  answers: string[];
+  correctAnswer: string;
+}
+
+interface PopupContentProps {
+  title: string;
+  imgSrc: string;
+  description: React.ReactNode;
+  questions: Question[];
+  coords: [number, number];
+  password: string;
+  onProceed: (password: string, questionData: Question[]) => void;
+}
+
+const PopupContent: React.FC<PopupContentProps> = ({
+  title,
+  imgSrc,
+  description,
+  questions,
+  coords,
+  password,
+  onProceed,
+}) => {
+  return (
+    <div className="space-y-4">
+      <h3 className="text-xl font-bold">{title}</h3>
+      <img src={imgSrc} alt={title} className="w-full h-auto rounded-lg mb-2" />
+      <div>{description}</div>
+      <p>
+        <em>
+          <strong>
+            Please scan the QR code at this location to reveal the passcode and
+            proceed to the riddle.
+          </strong>
+        </em>
+      </p>
+      <div className="flex gap-2 justify-center">
+        <Button
+          onClick={() => onProceed(password, questions)}
+          className="bg-white text-black border border-gray-300 shadow px-4 py-2 rounded hover:bg-gray-100 transition-colors duration-150"
+        >
+          Proceed
+        </Button>
+        <Button
+          onClick={() => {
+            const [lat, lng] = coords;
+            const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+            window.open(mapsUrl, "_blank");
+          }}
+          className="bg-white text-black border border-gray-300 shadow px-4 py-2 rounded hover:bg-gray-100 transition-colors duration-150"
+        >
+          Navigate
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default PopupContent;
 
 // File: src/components/Shared/Shared.module.css
 .button {
@@ -506,6 +961,511 @@ input {
   border-radius: 8px;
 }
 
+// File: src/pages/AboutUs/AboutUs.tsx
+import React from "react";
+
+const AboutUs = () => {
+  return (
+    <div className="bg-white-100 py-16 bg-[#0d1321]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <h1 className="text-5xl font-bold text-white mb-10 mt-10 text-center">
+          About Us
+        </h1>
+
+        {/* Who We Are Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold  text-white mb-6">Who We Are</h2>
+          <p className="text-xl text-white leading-relaxed">
+            City Escape Games was founded with a mission to redefine how people
+            explore cities by blending fun, adventure, and history into one
+            interactive experience. We are passionate about creating memorable
+            journeys for families, friends, and explorers of all kinds.
+          </p>
+        </section>
+
+        <hr className="border-t-2 border-white-300 mb-16" />
+
+        {/* What We Do Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold  text-white mb-6">What We Do</h2>
+          <p className="text-xl text-white leading-relaxed">
+            At City Escape Games, we design and develop engaging outdoor escape
+            games that take you on a unique journey through your favorite
+            cities. Each game combines puzzles, riddles, and city landmarks,
+            giving you the perfect blend of entertainment and exploration.
+          </p>
+          <p className="text-xl text-white leading-relaxed mt-4">
+            Our games are accessible via any smartphone or tablet, making it
+            easy for anyone to start their adventure. We’re constantly working
+            to add new challenges, cities, and features to keep the experience
+            fresh and exciting.
+          </p>
+        </section>
+
+        <hr className="border-t-2 border-white-300 mb-16" />
+
+        {/* Our Vision Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold  text-white mb-6">Our Vision</h2>
+          <p className="text-xl text-white leading-relaxed">
+            Our vision is to make learning and exploration fun for everyone.
+            Whether you’re a tourist discovering a city for the first time or a
+            local looking for a new way to experience your hometown, we aim to
+            bring people closer to history, culture, and each other through the
+            power of games.
+          </p>
+          <p className="text-xl text-white leading-relaxed mt-4">
+            We believe in creating experiences that are inclusive, educational,
+            and entertaining while leaving players with unforgettable memories.
+          </p>
+        </section>
+
+        <hr className="border-t-2 border-white-300 mb-16" />
+
+        {/* Meet the Team Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold  text-white mb-6">Meet the Team</h2>
+          <p className="text-xl text-white leading-relaxed">
+            Behind City Escape Games is a team of passionate individuals who
+            love adventure and storytelling. Our team includes game designers,
+            developers, writers, and local experts who work together to craft
+            immersive and exciting experiences for players around the world.
+          </p>
+          <p className="text-xl text-white leading-relaxed mt-4">
+            We are driven by a shared love for discovery and innovation, and we
+            strive to bring you the best outdoor escape game experience
+            possible.
+          </p>
+        </section>
+
+        <hr className="border-t-2 border-white-300 mb-16" />
+
+        {/* Contact Us Section */}
+        <section>
+          <h2 className="text-3xl font-bold  text-white mb-6">Contact Us</h2>
+          <p className="text-xl text-white leading-relaxed">
+            Have questions or feedback? We’d love to hear from you! Reach out to
+            us through our{" "}
+            <a href="/contact" className=" text-white underline">
+              Contact Us
+            </a>{" "}
+            page or email us at
+            <span className="font-bold"> support@cityescapegames.com</span>.
+            Let’s make your next adventure unforgettable!
+          </p>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default AboutUs;
+
+// File: src/pages/ContactUs/ContactUs.tsx
+import React from "react";
+
+const ContactUs = () => {
+  return (
+    <div className="py-16 bg-[#0d1321]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <h1 className="text-5xl font-bold  text-white mb-10 mt-10 text-center">
+          Contact Us
+        </h1>
+        <p className="text-xl text-white text-center mb-16">
+          Have questions, feedback, or just want to say hello? We'd love to hear
+          from you! Reach out to us through any of the options below, and we'll
+          get back to you as soon as possible.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          {/* Contact Information Section */}
+          <div className="bg-white p-8 rounded-lg shadow-md">
+            <h2 className="text-3xl font-bold  text-black mb-6">
+              Get in Touch
+            </h2>
+            <p className="text-lg text-black mb-4">
+              Our team is here to assist you with any questions or concerns. You
+              can contact us through the following channels:
+            </p>
+            <ul className="space-y-4 text-lg text-black">
+              <li>
+                <span className="font-bold">Email:</span>{" "}
+                <a
+                  href="mailto:support@cityescapegames.com"
+                  className=" text-black underline"
+                >
+                  support@cityescapegames.com
+                </a>
+              </li>
+              <li>
+                <span className="font-bold">Phone:</span>{" "}
+                <a href="tel:+1234567890" className=" text-black underline">
+                  +1 234 567 890
+                </a>
+              </li>
+              <li>
+                <span className="font-bold">Address:</span> City Escape Games
+                HQ, 123 Adventure Lane, Budapest, Hungary
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Form Section */}
+          <div className="bg-white p-8 rounded-lg shadow-md">
+            <h2 className="text-3xl font-bold  text-black mb-6">
+              Send Us a Message
+            </h2>
+            <form>
+              <div className="mb-6">
+                <label
+                  htmlFor="name"
+                  className="block text-lg font-medium text-black mb-2"
+                >
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full p-3 border border-white-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  placeholder="Enter your name"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  htmlFor="email"
+                  className="block text-lg font-medium text-black mb-2"
+                >
+                  Your Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  className="w-full p-3 border border-white-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  htmlFor="message"
+                  className="block text-lg font-medium text-black mb-2"
+                >
+                  Your Message
+                </label>
+                <textarea
+                  id="message"
+                  rows={5}
+                  className="w-full p-3 border border-white-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  placeholder="Enter your message"
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-white text-black border border-black p-4 rounded-lg shadow-md hover:bg-gray-200 transition"
+              >
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ContactUs;
+
+// File: src/pages/FAQ/FAQ.tsx
+import React, { useState } from "react";
+
+interface FAQItemProps {
+  question: string;
+  answer: string;
+}
+
+const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div>
+      <h3
+        className="text-2xl text-white mb-2 cursor-pointer flex justify-between items-center"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {question}
+        <span className="ml-4">{isOpen ? "▲" : "▼"}</span>
+      </h3>
+      {isOpen && <p className="text-lg text-white">{answer}</p>}
+    </div>
+  );
+};
+
+const FAQ = () => {
+  return (
+    <div className="bg-[#0d1321] py-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <h1 className="text-5xl font-bold text-white mb-10 mt-10 text-center">
+          Frequently Asked Questions
+        </h1>
+
+        {/* General Questions */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-white mb-6">General</h2>
+          <div className="space-y-6">
+            <FAQItem
+              question="What is City Escape Games?"
+              answer="City Escape Games is an interactive outdoor escape
+              game where you solve riddles, find clues, and uncover fascinating city
+              secrets. It’s a fun and educational experience for all ages."
+            />
+            <FAQItem
+              question="How long does the game take?"
+              answer="The game takes approximately 2 hours of active playtime.
+              However, you can take breaks and play at your own pace."
+            />
+            <FAQItem
+              question="Can I pause the game and resume later?"
+              answer="Yes, you can pause the game anytime and resume later. Keep in
+              mind that the leaderboard is based on total game time."
+            />
+          </div>
+        </section>
+
+        <hr className="border-t-2 border-white-300 mb-16" />
+
+        {/* Gameplay Questions */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-white mb-6">Gameplay</h2>
+          <div className="space-y-6">
+            <FAQItem
+              question="How do I start the game?"
+              answer="After purchasing or choosing a game, you will receive a
+              passcode. Use this passcode to unlock the game on the map and
+              start your adventure."
+            />
+            <FAQItem
+              question="What happens if I answer a question incorrectly?"
+              answer="Each incorrect answer results in a time penalty of 45 seconds.
+              You can attempt the question again after the penalty."
+            />
+            <FAQItem
+              question="Do I need to download an app to play?"
+              answer="No additional apps are required. The game runs directly from our
+              web application, accessible on any smartphone or tablet with
+              internet access."
+            />
+          </div>
+        </section>
+
+        <hr className="border-t-2 border-white-300 mb-16" />
+
+        {/* Teams and Participation */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-white mb-6">
+            Teams and Participation
+          </h2>
+          <div className="space-y-6">
+            <FAQItem
+              question="Can I play with my friends or family?"
+              answer="Yes! The game is designed for groups of all sizes. You can play
+              solo or collaborate with friends and family to solve the
+              challenges."
+            />
+            <FAQItem
+              question="Can multiple teams compete against each other?"
+              answer="Absolutely! Each team can start their own game and compete to
+              see who completes the challenges the fastest. Use the
+              leaderboard to track your results."
+            />
+            <FAQItem
+              question="Is the game suitable for children?"
+              answer="The game is suitable for players aged 15 and above. Younger
+              children can join with assistance from adults and still have fun
+              navigating and solving clues."
+            />
+          </div>
+        </section>
+
+        <hr className="border-t-2 border-white-300 mb-16" />
+
+        {/* Technical Support */}
+        <section>
+          <h2 className="text-3xl font-bold text-white mb-6">
+            Technical Support
+          </h2>
+          <div className="space-y-6">
+            <FAQItem
+              question="What do I do if I experience technical issues?"
+              answer="If you encounter any issues, please contact our support team via
+              email or through the 'Contact Us' page. We’ll assist you as
+              quickly as possible."
+            />
+            <FAQItem
+              question="Do I need an internet connection to play?"
+              answer="Yes, an internet connection is required to access the map,
+              clues, and other interactive features during the game."
+            />
+            <FAQItem
+              question="Can I play on any device?"
+              answer="You can play on any smartphone or tablet with an updated browser
+              and internet connection. For the best experience, use a modern
+              device."
+            />
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default FAQ;
+
+// File: src/pages/HowItWorks/HowItWorks.tsx
+import React from "react";
+import BudapestLogo from "../../assets/logo.png";
+import WhatDoYouNeedLogo from "../../assets/need.png";
+import WhoCanPlayLogo from "../../assets/people.png";
+import SafetyAndGuidelinesLogo from "../../assets/rules.png";
+import ReadyToBeginLogo from "../../assets/ready.png";
+
+const HowItWorks = () => {
+  return (
+    <div className="bg-white-100 text-white w-full">
+      {/* Top Section */}
+      <div className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#0d1321]">
+        {/* Left Section */}
+        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center">
+          <h1 className="text-5xl font-bold text-white text-left mb-8">
+            How It Works
+          </h1>
+          <p className="text-xl text-white leading-relaxed text-left mb-6">
+            City Escape Games is a collection of interactive outdoor escape
+            games where you solve riddles, find clues, and uncover fascinating
+            city secrets. Your journey will take you to iconic landmarks and
+            hidden gems while testing your knowledge and puzzle-solving skills.
+          </p>
+          <ul className="list-disc list-inside space-y-4 text-left text-lg text-white">
+            <li>Solving trivia puzzles and entertaining missions.</li>
+            <li>Discovering historical landmarks and hidden locations.</li>
+            <li>Facing time penalties for incorrect answers.</li>
+          </ul>
+        </div>
+
+        {/* Right Section */}
+        <div className="flex-1 flex justify-center items-center">
+          <img
+            src={BudapestLogo}
+            alt="City Escape Games Logo"
+            className="w-1/2 h-auto object-contain"
+          />
+        </div>
+      </div>
+
+      {/* What Do You Need? Section */}
+      <section className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#1d2d44]">
+        {/* Left Section */}
+        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center">
+          <h2 className="text-3xl font-bold text-white text-left mb-6">
+            What Do You Need?
+          </h2>
+          <ul className="list-disc list-inside space-y-4 text-xl text-white text-left ">
+            <li>A smartphone or tablet with internet access.</li>
+            <li>Comfortable shoes for walking around the city.</li>
+            <li>A team name if you’re competing with others.</li>
+          </ul>
+        </div>
+
+        {/* Right Section */}
+        <div className="flex-1 flex justify-center items-center">
+          <img
+            src={WhatDoYouNeedLogo}
+            alt="Placeholder"
+            className="w-1/2 h-auto object-contain"
+          />
+        </div>
+      </section>
+
+      {/* Who Can Play? Section */}
+      <section className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#0d1321]">
+        {/* Left Section */}
+        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center">
+          <h2 className="text-3xl font-bold text-white text-left mb-6">
+            Who Can Play?
+          </h2>
+          <p className="text-xl text-white text-left leading-relaxed">
+            The game is suitable for players aged 15 and above. Younger players
+            can join with a little help from adults.
+          </p>
+        </div>
+
+        {/* Right Section */}
+        <div className="flex-1 flex justify-center items-center">
+          <img
+            src={WhoCanPlayLogo}
+            alt="Placeholder"
+            className="w-1/2 h-auto object-contain"
+          />
+        </div>
+      </section>
+
+      {/* Safety and Guidelines Section */}
+      <section className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#1d2d44]">
+        {/* Left Section */}
+        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center">
+          <h2 className="text-3xl font-bold text-white text-left mb-6">
+            Safety and Guidelines
+          </h2>
+          <ul className="list-disc list-inside space-y-4 text-xl text-white text-left">
+            <li>Respect local laws and regulations while playing.</li>
+            <li>Be cautious in traffic and aware of your surroundings.</li>
+            <li>Avoid trespassing or disturbing private property.</li>
+            <li>
+              Take breaks when needed, but keep an eye on the leaderboard!
+            </li>
+          </ul>
+        </div>
+
+        {/* Right Section */}
+        <div className="flex-1 flex justify-center items-center">
+          <img
+            src={SafetyAndGuidelinesLogo}
+            alt="Placeholder"
+            className="w-1/2 h-auto object-contain"
+          />
+        </div>
+      </section>
+
+      {/* Ready to Begin? Section */}
+      <section className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-[#0d1321]">
+        {/* Left Section */}
+        <div className="flex-1 max-w-2xl mx-auto ml-20 mr-9 text-center">
+          <h2 className="text-3xl font-bold text-white text-left mb-6">
+            Ready to Begin?
+          </h2>
+          <p className="text-xl text-white text-left leading-relaxed">
+            Select your city and start your game from the homepage. Solve
+            riddles, explore hidden spots, and enjoy the adventure at your own
+            pace. Your next escape awaits!
+          </p>
+        </div>
+
+        {/* Right Section */}
+        <div className="flex-1 flex justify-center items-center">
+          <img
+            src={ReadyToBeginLogo}
+            alt="Placeholder"
+            className="w-1/2 h-auto object-contain"
+          />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default HowItWorks;
+
 // File: index.html
 <!DOCTYPE html>
 <html lang="en">
@@ -522,21 +1482,36 @@ input {
 
 // File: src/App.tsx
 import "leaflet/dist/leaflet.css";
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Map from "./components/Map/Map.tsx";
-import RiddlePage from "./components/RiddlePage/RiddlePage.tsx";
+import Navbar from "./components/NavBar/NavBar";
+import Footer from "./components/Footer/Footer";
+import Home from "./components/Home/Home";
+import Map from "./components/Map/Map";
+import RiddlePage from "./components/RiddlePage/RiddlePage";
+import HowItWorks from "./pages/HowItWorks/HowItWorks";
+import FAQ from "./pages/FAQ/FAQ";
+import AboutUs from "./pages/AboutUs/AboutUs";
+import ContactUs from "./pages/ContactUs/ContactUs";
 
-export default function App() {
+const App = () => {
   return (
     <Router>
+      <Navbar />
       <Routes>
-        <Route path="/" element={<Map />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/map" element={<Map />} />
         <Route path="/riddle" element={<RiddlePage />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactUs />} />
       </Routes>
+      <Footer />
     </Router>
   );
-}
+};
+
+export default App;
 
 // File: src/main.tsx
 import React from "react";
