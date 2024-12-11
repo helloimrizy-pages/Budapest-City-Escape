@@ -24,7 +24,7 @@ const Footer = () => {
         {/* Top section with navigation links */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <div className="mb-6 md:mb-0">
-            <h2 className="text-2xl font-bold">City Escape Games</h2>
+            <h2 className="text-2xl font-bold">Travelogues</h2>
           </div>
           <nav className="flex space-x-4">
             <a
@@ -66,8 +66,7 @@ const Footer = () => {
         {/* Bottom section with social media */}
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} City Escape Games. All rights
-            reserved.
+            &copy; {new Date().getFullYear()} Travelogues. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <a
