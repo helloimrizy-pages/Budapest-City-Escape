@@ -16,10 +16,10 @@ const Home = () => {
       {/* Content */}
       <div className="relative z-10 text-center">
         <h1 className="text-5xl font-bold text-white mb-6">
-          Welcome to Explore Budapest!
+          Welcome to Travelogues!
         </h1>
         <p className="text-xl text-white max-w-2xl mb-8">
-          Discover the hidden treasures of Budapest while solving fun riddles. A
+          Discover the city wall of Budapest while solving fun riddles. A
           perfect blend of history, exploration, and entertainment awaits!
         </p>
         <Link
