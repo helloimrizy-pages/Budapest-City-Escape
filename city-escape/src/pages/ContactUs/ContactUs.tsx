@@ -28,7 +28,7 @@ const ContactUs = () => {
                   href="mailto:support@cityescapegames.com"
                   className=" text-black underline"
                 >
-                  support@cityescapegames.com
+                  support@travelogues.com
                 </a>
               </li>
               <li>
@@ -38,8 +38,8 @@ const ContactUs = () => {
                 </a>
               </li>
               <li>
-                <span className="font-bold">Address:</span> City Escape Games
-                HQ, 123 Adventure Lane, Budapest, Hungary
+                <span className="font-bold">Address:</span> Travelogues HQ,
+                Múzeum krt. 2, Budapest, Hungary
               </li>
             </ul>
           </div>
