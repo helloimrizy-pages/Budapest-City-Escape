@@ -15,15 +15,16 @@ const HowItWorks = () => {
             How It Works
           </h1>
           <p className="text-xl text-white leading-relaxed text-left mb-6">
-            City Escape Games is a collection of interactive outdoor escape
-            games where you solve riddles, find clues, and uncover fascinating
-            city secrets. Your journey will take you to iconic landmarks and
-            hidden gems while testing your knowledge and puzzle-solving skills.
+            Travelogues is a platform of interactive outdoor city escape game
+            where you solve riddles, find clues, and uncover fascinating city
+            secrets related with the city wall of Budapest. Your journey will
+            take you to historical city wall while testing your knowledge and
+            puzzle-solving skills.
           </p>
           <ul className="list-disc list-inside space-y-4 text-left text-lg text-white">
-            <li>Solving trivia puzzles and entertaining missions.</li>
-            <li>Discovering historical landmarks and hidden locations.</li>
-            <li>Facing time penalties for incorrect answers.</li>
+            <li>Solving trivia quizzes and entertaining missions.</li>
+            <li>Discovering historical city walls</li>
+            <li>Facing challenges for incorrect answers.</li>
           </ul>
         </div>
 
@@ -46,22 +47,23 @@ const HowItWorks = () => {
           </h1>
           <ul className="list-disc list-inside space-y-4 text-xl text-white text-left mb-0 pb-8">
             <li className="m-0 p-0">
-              A smartphone or tablet with internet access: This is essential for
-              accessing the game, solving riddles, and navigating the city
-              during your adventure. Make sure your device is fully charged or
-              carry a power bank to avoid interruptions.
+              A smartphone/tablet or any devices with browser and internet
+              access: This is essential for accessing the game, solving riddles,
+              and navigating the city during your adventure. Make sure your
+              device is fully charged or carry a power bank to avoid
+              interruptions.
             </li>
             <li className="m-0 p-0">
               Comfortable shoes for walking around the city: Be prepared to
-              explore various landmarks, streets, and hidden spots on foot. A
-              comfortable pair of shoes will ensure you enjoy the experience
-              without any discomfort.
+              explore various city walls, landmarks, streets, and hidden spots
+              on foot. A comfortable pair of shoes will ensure you enjoy the
+              experience without any discomfort.
             </li>
             <li className="m-0 p-0">
-              A team name if you’re competing with others: If you’re playing as
-              a group, come up with a fun and creative team name to add
-              excitement to the challenge and leave your mark on the
-              leaderboard.
+              Fun team members if you’re competing with others: If you’re
+              playing as a group, form a team that reflects your style,
+              personality, or strategy. This will help you increase your team
+              spirit and make the game more fun and engaging.
             </li>
           </ul>
         </div>
@@ -130,11 +132,10 @@ const HowItWorks = () => {
               without proper authorization.
             </li>
             <li>
-              Take breaks when needed, but keep an eye on the leaderboard!: The
-              game is meant to be fun and engaging, but don’t forget to pace
-              yourself. Take short breaks to recharge, hydrate, or grab a snack,
-              and then jump back in with renewed energy to maintain your
-              competitive edge.
+              Take breaks when needed: The game is meant to be fun and engaging,
+              but don’t forget to pace yourself. Take short breaks to recharge,
+              hydrate, or grab a snack, and then jump back in with renewed
+              energy to maintain your competitive edge.
             </li>
           </ul>
         </div>
@@ -156,17 +157,16 @@ const HowItWorks = () => {
             Ready to Begin?
           </h2>
           <p className="text-xl text-white text-left leading-relaxed pb-8">
-            Select your city from the homepage and dive into an unforgettable
-            adventure. Start your journey by solving clever riddles and
-            unraveling thought-provoking puzzles, each designed to challenge
-            your wit and creativity. Along the way, you'll uncover hidden gems
-            and iconic landmarks, immersing yourself in the rich history and
-            culture of the city. Whether you prefer to take your time exploring
-            or race against the clock to climb the leaderboard, the experience
-            is entirely yours to shape. Gather your team, put on your thinking
-            caps, and get ready to embark on a thrilling quest filled with
-            surprises at every turn. Your next escape awaits—are you ready to
-            begin?
+            Click "Start the game" from the homepage or navigation bar and dive
+            into an unforgettable adventure. Start your journey by solving
+            clever riddles and unraveling thought-provoking puzzles, each
+            designed to challenge your wit and creativity. Along the way, you'll
+            uncover hidden gems and iconic landmarks, immersing yourself in the
+            rich history and culture of the city. Whether you prefer to take
+            your time exploring or learning, the experience is entirely yours to
+            shape. Gather your team, put on your thinking caps, and get ready to
+            embark on a thrilling quest filled with surprises at every turn.
+            Your next escape awaits—are you ready to begin?
           </p>
         </div>
 
