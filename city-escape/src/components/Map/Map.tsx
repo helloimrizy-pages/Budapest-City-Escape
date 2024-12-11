@@ -39,8 +39,8 @@ const Map = () => {
   const handleProceed = (riddleId: number) => {
     const passcode = prompt("Enter the passcode to proceed:");
     const passcodes: Passcodes = {
-      1: "1234",
-      2: "5678",
+      1: "1332",
+      2: "ABA",
       3: "abcd",
     };
 
@@ -120,7 +120,7 @@ const Map = () => {
     "Residential Building on the Old Wall",
     "https://welovebudapest.com/i/8e/varosfal_korosi-tamas_20160330.exact1980w.jpg",
     "This residential building stands atop what once formed part of Pest’s medieval city wall. Beneath its foundations lie centuries of layered defense, now woven quietly into everyday living spaces. Within these modern walls, echoes of an older city linger, bridging the past and present in the heart of Budapest.",
-    [47.49147045884514, 19.060478228267108],
+    [47.491346160228865, 19.061201111071206],
     () => handleProceed(3) // Pass riddleId 3
   );
 
