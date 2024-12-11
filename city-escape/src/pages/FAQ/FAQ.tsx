@@ -35,10 +35,10 @@ const FAQ = () => {
           <h2 className="text-3xl font-bold text-white mb-6">General</h2>
           <div className="space-y-6">
             <FAQItem
-              question="What is City Escape Games?"
-              answer="City Escape Games is an interactive outdoor escape
+              question="What is Travelogues?"
+              answer="Travelogues is an interactive outdoor city escape
               game where you solve riddles, find clues, and uncover fascinating city
-              secrets. It’s a fun and educational experience for all ages."
+              secrets of Budapest City Walls. It’s a fun and educational experience for all ages."
             />
             <FAQItem
               question="How long does the game take?"
@@ -47,8 +47,7 @@ const FAQ = () => {
             />
             <FAQItem
               question="Can I pause the game and resume later?"
-              answer="Yes, you can pause the game anytime and resume later. Keep in
-              mind that the leaderboard is based on total game time."
+              answer="Yes, you can pause the game anytime and resume later."
             />
           </div>
         </section>
@@ -61,20 +60,20 @@ const FAQ = () => {
           <div className="space-y-6">
             <FAQItem
               question="How do I start the game?"
-              answer="After purchasing or choosing a game, you will receive a
+              answer="After purchasing, you will receive a
               passcode. Use this passcode to unlock the game on the map and
               start your adventure."
             />
             <FAQItem
               question="What happens if I answer a question incorrectly?"
-              answer="Each incorrect answer results in a time penalty of 45 seconds.
-              You can attempt the question again after the penalty."
+              answer="You need to answer all of the questions correctly in order to get a passcode to the next location.
+              You can attempt the question again many times."
             />
             <FAQItem
               question="Do I need to download an app to play?"
               answer="No additional apps are required. The game runs directly from our
               web application, accessible on any smartphone or tablet with
-              internet access."
+              internet access and browser."
             />
           </div>
         </section>
@@ -95,9 +94,7 @@ const FAQ = () => {
             />
             <FAQItem
               question="Can multiple teams compete against each other?"
-              answer="Absolutely! Each team can start their own game and compete to
-              see who completes the challenges the fastest. Use the
-              leaderboard to track your results."
+              answer="Not yet, but we are working on a multiplayer version of the game."
             />
             <FAQItem
               question="Is the game suitable for children?"
