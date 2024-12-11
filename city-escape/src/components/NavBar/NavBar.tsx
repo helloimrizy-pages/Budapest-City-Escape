@@ -31,7 +31,7 @@ const Navbar = () => {
               to="/"
               className="text-white hover:text-gray-300 transition-colors duration-200"
             >
-              Explore Budapest
+              Travelogues
             </Link>
           </div>
 
