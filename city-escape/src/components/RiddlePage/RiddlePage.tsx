@@ -5,11 +5,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import FeedbackMessage from "../Shared/FeedbackMessage";
 import Button from "../Shared/Button";
 import styles from "./RiddlePage.module.css";
+import berlinGate from "../../assets/berlin_gate.png";
+import pragueWall from "../../assets/prague_wall.png";
+import englandWall from "../../assets/england_wall.png";
+import residentialImage from "../../assets/residential_image.png";
+import poemImage from "../../assets/poem.png";
 
 interface Question {
   question: string;
   options: string[];
   correctAnswer: string;
+  image?: string; // Optional field for question-specific images
+  explanation?: string; // Optional field for explanations
 }
 
 interface Riddle {
@@ -26,53 +33,21 @@ const riddles: Record<string, Riddle> = {
     questions: [
       {
         question:
-          "How do you think the presence of physical walls, like the city wall, influenced children's play and social interactions in this area?",
-        options: [
-          "They restricted where children could play, forcing them to remain close to family and familiar faces.",
-          "They encouraged children to creatively use limited space, finding new ways to interact despite barriers.",
-          "They had no real effect; children’s play remained unchanged regardless of physical boundaries.",
-          "They sparked curiosity about what lay beyond the walls, influencing children to imagine new worlds.",
-        ],
-        correctAnswer:
-          "They encouraged children to creatively use limited space, finding new ways to interact despite barriers.",
-      },
-      {
-        question:
-          "In what ways do adults’ complaints create invisible walls in communication with children?",
-        options: [
-          "Complaints can make children feel misunderstood and hesitant to share their thoughts.",
-          "Complaints serve as harmless expressions that don’t significantly affect children’s willingness to talk.",
-          "Complaints can create an atmosphere of tension, limiting open and honest conversation.",
-          "Complaints lead children to distrust adults, viewing them as constantly critical rather than supportive.",
-        ],
-        correctAnswer:
-          "Complaints can make children feel misunderstood and hesitant to share their thoughts.",
-      },
-      {
-        question:
-          "Can you recall a time when a complaint disrupted a conversation or interaction? What was the outcome?",
-        options: [
-          "The complaint caused everyone to fall silent, halting the flow of the conversation.",
-          "The complaint encouraged people to address the issue openly, ultimately improving understanding.",
-          "The complaint was ignored, and the conversation continued smoothly without acknowledgment.",
-          "The complaint led some participants to withdraw and others to speak more cautiously, altering the group’s dynamic.",
-        ],
-        correctAnswer:
-          "The complaint led some participants to withdraw and others to speak more cautiously, altering the group’s dynamic.",
+          "To continue the tour, you need to find out what the first stop symbolises! The building you are looking for is named after a small planet. When you find it, face it and guess what the structure between the two buildings represents!",
+        options: ["A bridge.", "A gate."],
+        correctAnswer: "A gate.",
       },
     ],
-    images: [
-      "https://welovebudapest.com/i/9f/kalvin4.exact1980w.jpg",
-      "https://welovebudapest.com/i/13/kalvin1844vagy1852.exact1980w.jpg",
-    ],
+    images: [berlinGate, pragueWall, englandWall],
     description: [
-      "Long ago, the area around Bástya utca was marked by the presence of Pest’s old city wall—an imposing structure that once determined who could enter, leave, or linger. This defensive barrier, while offering safety from outside threats, also created subtle divisions within the community. Life thrived inside and outside its borders, but the wall’s presence encouraged certain patterns of behavior, shaping how residents interacted, moved, and played.",
-      "Over time, as the city expanded and the old fortifications lost their purpose, these walls were removed or integrated into the urban fabric. Today, in place of that once formidable boundary, a playground stands—an open, welcoming space dedicated to children’s play. Here, laughter and imagination flow freely, unfettered by the physical restrictions that characterized this spot centuries ago. Kids chase each other, invent games, and communicate without the heavy weight of history. They cross “boundaries” made of chalk lines rather than stone, breaking down social barriers through simple acts of cooperation, curiosity, and kindness.",
-      "However, while children generally approach the world with openness, adults sometimes construct their own invisible barriers through habits like complaining or criticizing. These intangible “walls” of negativity can limit understanding and discourage genuine connection. Within this playground setting, we’re reminded that human interactions—whether in childhood or adulthood—can be shaped by the presence or absence of both visible and invisible barriers. Overcoming these obstacles, whether physical stones or critical tones, leads to healthier, more vibrant communities.",
+      "Which famous walls do you recognise in the pictures below? The pictures below show walls that shed light on several of their functions when used. In this way, a wall can often not only protect the area it encloses in a positive sense, but also separate people from each other.",
+      "The city walls of Budapest serve a defensive function, as many nations have conquered Hungary over the centuries. The line along which the tour follows the footprint of the second city wall, built in the late medieval times. Within the semi-circle was the Old Town, which later outgrew itself and can now be found in only a few places, but this tour takes you to these points, and the line of the houses built on the Museum Boulevard is defined by the former city wall. ",
+      "Kálvin Square, where bustling life now flourishes, holds beneath its surface the site where the old Kecskeméti Gate once stood. As an entryway to the city, this section of the city wall served as a major commercial hub. This gate played a crucial role in handling the flow of travellers and goods, shaping the prosperity and culture of the region. Carts carrying goods from the Alföld (Great Plain) entered the trading town through this gate, and their drivers rested and fed their horses in the old Széna Square. Over time, Széna Square was relocated to Buda, and the Pest city wall was demolished, making way for the development of today’s Kiskörút (“Little Boulevard”). The area, later renamed Kálvin Square, has remained an important gateway to the city ever since.",
+      "If you chose the correct answers, you will get the password for the next station! You have to click on the pin „2” on the map, and then type the password in the order of the questions!  ",
     ],
     successFeedback: [
       "Great job! You've completed the riddle.",
-      "Passcode for next location 'Playground at Bástya Street': 1234",
+      "Passcode for next location 'Playground at Bástya Street': ABA",
     ],
   },
   "2": {
@@ -80,36 +55,41 @@ const riddles: Record<string, Riddle> = {
     questions: [
       {
         question:
-          "How do you think the presence of physical walls, like the city wall, influenced children's play and social interactions in this area?",
-        options: [
-          "The walls restricted children’s access to open spaces, encouraging creativity in limited areas.",
-          "The walls provided a sense of safety, allowing children to play freely without external threats.",
-          "The walls created curiosity about what lay beyond, fostering imaginative play.",
-          "All of the above.",
-        ],
-        correctAnswer: "All of the above.",
+          "What is the passage called where you can walk along the wall?",
+        options: ["Machicolation.", "Casemate.", "Tunnel."],
+        correctAnswer: "Machicolation.",
+        image:
+          "https://scontent.xx.fbcdn.net/v/t1.15752-9/462577570_946877990656423_2428534327969417026_n.jpg?stp=dst-jpg_s640x640_tt6&_nc_cat=107&ccb=1-7&_nc_sid=0024fc&_nc_ohc=2umVfUOFZkAQ7kNvgGfqxXI&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&oh=03_Q7cD1QEwfaNrKcNOh_XUiojqt0NqaOsYG0LUMQE8Tiit5MbzTA&oe=67801943",
+        explanation:
+          "Machicolation is a narrow passage that defenders were using during enemy attacks. It was placed in a way that only a small part were visible of the defenders between the battlements, so they were protected from enemy fire.",
       },
       {
         question:
-          "In what ways do adults' complaints create invisible walls in communication with children?",
+          "Examine the wall! Can you guess what were those vertical tunnels were used for?",
         options: [
-          "Complaints make children feel unheard or misunderstood, reducing their willingness to communicate openly.",
-          "Complaints help children understand their mistakes and foster better behavior.",
-          "Complaints create an atmosphere of tension, discouraging natural and honest interactions.",
-          "Both A and C.",
+          "They are latrine slopes of the wall.",
+          "They are stovepipe-tunnels built-in the wall.",
+          "They are for the lumbers that fortify the wall.",
         ],
-        correctAnswer: "Both A and C.",
+        correctAnswer: "They are stovepipe-tunnels built-in the wall.",
+        image:
+          "https://scontent.xx.fbcdn.net/v/t1.15752-9/462560475_563050979772361_4734082999267755239_n.jpg?stp=dst-jpg_s552x414_tt6&_nc_cat=110&ccb=1-7&_nc_sid=0024fc&_nc_ohc=Wbh6bgAjF9cQ7kNvgE2N8op&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&oh=03_Q7cD1QEb4j2Hse689VjrRrjEY0gyyfV8Yky51xtnw3TvYn2G0g&oe=67800D5B",
+        explanation:
+          "Because of the continuity of Pest, during the centuries the city slowly outgrew the walls, having them incorporated into residential buildings. As households developed, people needed to make necessary modifications ont he built heritage to secure their comfort. This is the case with stovepipe-tunnels as well.",
       },
       {
         question:
-          "Can you recall a time when a complaint disrupted a conversation or interaction? What was the outcome?",
+          "Look for traces of the wall! Can you spot in what direction it continues?",
         options: [
-          "The complaint led to silence, stopping the conversation altogether.",
-          "The complaint encouraged reflection, leading to a constructive outcome.",
-          "The complaint caused tension, resulting in misunderstanding or avoidance.",
-          "Both A and C.",
+          "Towards the river Danube.",
+          "Towards Király Pál street.",
+          "It ends at the playground.",
         ],
-        correctAnswer: "Both A and C.",
+        correctAnswer: "Towards the river Danube.",
+        image:
+          "https://scontent.xx.fbcdn.net/v/t1.15752-9/462576745_1948548128990494_2805081667314914683_n.jpg?stp=dst-jpg_s552x414_tt6&_nc_cat=109&ccb=1-7&_nc_sid=0024fc&_nc_ohc=SGUX6lKAIUgQ7kNvgF0WAQi&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&oh=03_Q7cD1QGFUGy8TKexxLJxll8Qyxke-wxYd4HRpCKQAnGtzuyzQg&oe=67802EF0",
+        explanation:
+          "The usage of paving blocks was common during the previous centuries in Hungarian Heritage Protection. You can find them many places along this tour. Expect some history when you see them!",
       },
     ],
     images: [
@@ -123,6 +103,7 @@ const riddles: Record<string, Riddle> = {
     successFeedback: [
       "Great job! You've completed the riddle.",
       "Passcode for next location 'Residential Building on the Old Wall': abcd",
+      "Go outside the walls and head towards the middle gate of the city. Also look for the numbers 31-33 on the Boulvard. Across the road you’ll see a building where all antiquites belong.",
     ],
   },
   "3": {
@@ -130,52 +111,55 @@ const riddles: Record<string, Riddle> = {
     questions: [
       {
         question:
-          "What challenges did residents face when the city wall was built or demolished in terms of their sense of community?",
+          "What significance does the old city wall remnant hold at Museum Boulevard  31-33?",
         options: [
-          "The city wall restricted communication, isolating residents within a small, close-knit group.",
-          "The demolition of the wall brought unfamiliar people into the community, leading to tension.",
-          "Residents struggled to adapt to new spaces, losing the sense of safety the wall provided.",
-          "All of the above.",
+          "It marks the boundary of old Pest.",
+          "It's part of a famous poet's residence.",
         ],
-        correctAnswer: "All of the above.",
+        correctAnswer: "It marks the boundary of old Pest.",
       },
       {
         question:
-          "How does complaining about neighbors or local issues contribute to a sense of division among residents?",
-        options: [
-          "Complaints can foster mistrust and tension, making residents hesitant to engage openly.",
-          "Complaints encourage residents to work together to address shared concerns.",
-          "Complaints are harmless and rarely affect the relationships between neighbors.",
-          "Complaints create visible divisions, such as different groups avoiding one another.",
-        ],
-        correctAnswer:
-          "Complaints can foster mistrust and tension, making residents hesitant to engage openly.",
+          "Now you are going to read a poem. Find out which word is missing from the gaps!",
+        options: ["Key.", "Door.", "Floor."],
+        correctAnswer: "Key.",
+        image: poemImage,
+      },
+      {
+        question: "How many shops does the building have?",
+        options: ["0", "2", "3", "4"],
+        correctAnswer: "0",
       },
       {
         question:
-          "Reflect on how you communicate your concerns about your living environment. Do you find it builds bridges or walls with your neighbors?",
-        options: [
-          "Sharing concerns constructively can lead to collaboration and mutual understanding.",
-          "Expressing frustration without resolution often increases tension and divides the community.",
-          "Avoiding communication altogether prevents conflict but also limits opportunities for unity.",
-          "Both A and B.",
-        ],
-        correctAnswer: "Both A and B.",
+          "How many floors does the building have? (Not including the ground floor)",
+        options: ["1", "2", "3", "4"],
+        correctAnswer: "3",
+      },
+      {
+        question:
+          "In which direction should you proceed to find your way to the Danube from here?",
+        options: ["East.", "North.", "South."],
+        correctAnswer: "South.",
+      },
+      {
+        question:
+          "If you're standing in the right place, you can see the National Museum, which collects and exhibits artefacts from Hungarian history, across the street. The composition of the façade's tympanum was designed by sculptor Ludwig Schaller. How many corners does this tympanum have?",
+        options: ["1", "2", "3"],
+        correctAnswer: "3",
       },
     ],
-    images: [
-      "https://welovebudapest.com/i/8e/varosfal_korosi-tamas_20160330.exact1980w.jpg",
-      "https://welovebudapest.com/i/d5/varosfal_korosi-tamas_20160330.exact1980w.jpg",
-    ],
+    images: [residentialImage],
     description: [
-      "Nestled within the heart of Budapest, the residential garden of Múzeum körút 31-33 offers a quiet sanctuary away from the bustling streets. Historically, this area served as a boundary between the protected city and its surrounding countryside, where residents sought refuge behind the city wall. While the walls provided physical safety, they also created a psychological divide, limiting interactions between those inside and outside the walls.",
-      "When the city wall was eventually demolished to make way for urban expansion, it symbolized the transition from isolation to integration. This shift was bittersweet for many residents—while it allowed for new connections and opportunities, it also brought challenges such as increased noise, loss of privacy, and a blending of diverse social classes that sometimes led to conflict.",
-      "Today, the garden reflects these historical tensions. It is a private space where residents can retreat, offering a sense of calm and solitude. However, it also represents how urban spaces can inadvertently foster division. Complaints about noise, maintenance, or neighborly disputes are common and can create invisible walls between residents, discouraging a sense of unity. The garden reminds us that while physical barriers may disappear, emotional and social divides often linger. It challenges us to consider how we engage with our communities—do we use our words and actions to build bridges, or do we unintentionally create walls?",
+      "Hidden among the buildings of Museum Boulevard lies a forgotten piece of history: one of the last remaining section of Pest’s old city wall. This quiet inner courtyard holds a wall remnant that once protected the bustling medieval city. During the devastation of the Second World War, the buildings along the Museum Boulevard were severely damaged and had to be demolished. In the process, an 18-meter-long segment of the city wall’s outer side was uncovered in the courtyard of Museum Boulevard 31-33, built into the fire wall of Magyar Street 42., offering a silent reminder of the city’s storied past.",
+      "To get into the inner courtyard, you need to answer the following questions to get the code!",
     ],
-    successFeedback: ["Great job! You have finished the game!"],
+    successFeedback: [
+      "If you answered correctly, you got 5 numbers and a symbol! Find the device to enter pincode in the doorway! (In the order of the questions).",
+      "Great job! You have finished the game!",
+    ],
   },
 };
-
 const RiddlePage: React.FC = () => {
   const navigate = useNavigate();
   interface RouteParams extends Record<string, string | undefined> {
@@ -186,6 +170,7 @@ const RiddlePage: React.FC = () => {
     Record<number, string | null>
   >({});
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [explanations, setExplanations] = useState<string[]>([]); // Array to hold explanations for questions
 
   const riddle = riddleId && riddles[riddleId] ? riddles[riddleId] : undefined;
 
@@ -200,17 +185,30 @@ const RiddlePage: React.FC = () => {
   }
 
   const handleAnswer = () => {
-    const incorrectAnswers = riddle.questions.some(
+    const newExplanations: string[] = [];
+
+    riddle.questions.forEach((q, i) => {
+      const isCorrect = selectedAnswers[i] === q.correctAnswer;
+      if (isCorrect && q.explanation) {
+        // Only add explanation if the answer is correct
+        newExplanations[i] = q.explanation;
+      }
+    });
+
+    // Check if there are any incorrect answers
+    const hasIncorrectAnswers = riddle.questions.some(
       (q, i) => selectedAnswers[i] !== q.correctAnswer
     );
 
-    if (incorrectAnswers) {
+    if (hasIncorrectAnswers) {
       setFeedback("Incorrect. Try again!");
     } else {
       setFeedback(
         "Please proceed to the next location by clicking the 'close' button below."
       );
     }
+
+    setExplanations(newExplanations); // Update explanations only for correct answers
   };
 
   const handleAnswerChange = (index: number, answer: string) => {
@@ -224,6 +222,7 @@ const RiddlePage: React.FC = () => {
 
   const handleClose = () => {
     setFeedback(null);
+    setExplanations([]);
     navigate("/map");
   };
 
@@ -253,6 +252,13 @@ const RiddlePage: React.FC = () => {
       <div className={styles.quiz}>
         {riddle.questions.map((q, index) => (
           <div key={index} className="mb-4">
+            {q.image && (
+              <img
+                src={q.image}
+                alt={`Question ${index + 1} Image`}
+                className={styles.questionImage}
+              />
+            )}
             <p>{q.question}</p>
             {q.options.map((option) => (
               <label key={option} className={styles.label}>
@@ -269,8 +275,8 @@ const RiddlePage: React.FC = () => {
                 {option}
               </label>
             ))}
-            {index < riddle.questions.length - 1 && (
-              <hr className="my-4 border-t border-gray-300 mt-8" />
+            {feedback && explanations[index] && (
+              <div className={styles.explanation}>{explanations[index]}</div>
             )}
           </div>
         ))}
