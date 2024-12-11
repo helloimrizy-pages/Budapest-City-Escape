@@ -10,10 +10,13 @@ const AboutUs = () => {
         <section className="mb-16">
           <h2 className="text-3xl font-bold  text-white mb-6">Who We Are</h2>
           <p className="text-xl text-white leading-relaxed">
-            City Escape Games was founded with a mission to redefine how people
-            explore cities by blending fun, adventure, and history into one
-            interactive experience. We are passionate about creating memorable
-            journeys for families, friends, and explorers of all kinds.
+            Travelogues was founded with a mission to redefine how people
+            explore cities by blending fun, adventure, and history about the
+            city walls into one interactive experience. The idea firstly came
+            from the course project called "Living Past" at Eötvös Loránd
+            University collaborating with Utrecth University. We are passionate
+            about creating memorable journeys for families, friends, and
+            explorers of all kinds.
           </p>
         </section>
 
@@ -23,10 +26,10 @@ const AboutUs = () => {
         <section className="mb-16">
           <h2 className="text-3xl font-bold  text-white mb-6">What We Do</h2>
           <p className="text-xl text-white leading-relaxed">
-            At City Escape Games, we design and develop engaging outdoor escape
-            games that take you on a unique journey through your favorite
-            cities. Each game combines puzzles, riddles, and city landmarks,
-            giving you the perfect blend of entertainment and exploration.
+            At Travelogues, we design and develop engaging outdoor city escape
+            game that take you on a unique journey through your favorite city.
+            We combine puzzles, riddles, and city landmarks, giving you the
+            perfect blend of entertainment and exploration.
           </p>
           <p className="text-xl text-white leading-relaxed mt-4">
             Our games are accessible via any smartphone or tablet, making it
@@ -60,8 +63,8 @@ const AboutUs = () => {
         <section className="mb-16">
           <h2 className="text-3xl font-bold  text-white mb-6">Meet the Team</h2>
           <p className="text-xl text-white leading-relaxed">
-            Behind City Escape Games is a team of passionate individuals who
-            love adventure and storytelling. Our team includes game designers,
+            Behind Travelogues is a team of passionate individuals who love
+            adventure and storytelling. Our team includes game designers,
             developers, writers, and local experts who work together to craft
             immersive and exciting experiences for players around the world.
           </p>
@@ -84,8 +87,8 @@ const AboutUs = () => {
               Contact Us
             </a>{" "}
             page or email us at
-            <span className="font-bold"> support@cityescapegames.com</span>.
-            Let’s make your next adventure unforgettable!
+            <span className="font-bold"> support@travelogues.com</span>. Let’s
+            make your next adventure unforgettable!
           </p>
         </section>
       </div>
