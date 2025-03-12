@@ -68,8 +68,8 @@ This project is an interactive outdoor city exploration game that blends histori
 
 ### 1️⃣ Clone the Repository  
 ```bash
-git clone https://github.com/yourusername/interactive-city-game.git
-cd interactive-city-game
+git clone https://github.com/yourusername/Budapest-City-Escape.git
+cd Budapest-City-Escape
 ```
 
 ### 2️⃣ Install Frontend Dependencies
